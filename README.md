@@ -5,7 +5,7 @@ A test project for testing my capabilities
 
 
 # PhoneCentre
- The project was created using the Visual Studio C# Wep Api + ReactJs T\emplate
+ The project was created using the Visual Studio C# Wep Api + ReactJs Template
 
 ## Project Setup:
  1. Go to SQL Server Management Studio
