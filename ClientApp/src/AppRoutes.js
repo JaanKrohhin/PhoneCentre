@@ -1,19 +1,20 @@
-import { Counter } from "./components/Counter";
-import { FetchData } from "./components/FetchData";
-import { Home } from "./components/Home";
+import Table from "./components/Table";
+import Detail from "./components/Detail";
+import HistoryPage from "./components/HistoryPage";
 
+//Define the routes of the application
 const AppRoutes = [
   {
-    index: true,
-    element: <Home />
+    path: '/',
+    element: <Table />
   },
   {
-    path: '/counter',
-    element: <Counter />
+    path: 'details/:id',
+    element: <Detail />
   },
   {
-    path: '/fetch-data',
-    element: <FetchData />
+    path: 'history/:id',
+    element: <HistoryPage />
   }
 ];
 
