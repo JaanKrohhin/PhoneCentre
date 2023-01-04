@@ -118,6 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="connectionString" xml:space="preserve">
-    <value>Data Source=.\SQLEXPRESS;Initial Catalog=CallerDB;Integrated Security=True; TrustServerCertificate=Yes;</value>
+    <value>Data Source=LocalDatabase.db</value>
   </data>
 </root>

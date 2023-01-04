@@ -61,7 +61,7 @@ namespace PhoneCentre.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data Source=.\SQLEXPRESS;Initial Catalog=CallerDB;Integrated Security=True; TrustServerCertificate=Yes;.
+        ///   Looks up a localized string similar to Data Source=LocalDatabase.db.
         /// </summary>
         internal static string connectionString {
             get {
