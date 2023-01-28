@@ -9,7 +9,7 @@ class Table extends React.Component {
         super(props);
         this.state = {
             data: null,
-            sortColumnName: "caller",
+            sortColumnName: "Caller_",
             rowSizes: [5,10,25],
             selectedSize: 5,
             pageNumber: 1,
@@ -105,9 +105,9 @@ class Table extends React.Component {
                 <table className="fl-table main-table">
                     <thead>
                     <tr className={"row-header-click"}>
-                        <th onClick={() => this.headerClickHandle({column:"caller"})}>Caller</th>
+                        <th onClick={() => this.headerClickHandle({column:"Caller_"})}>Caller</th>
                         <th>Event</th>
-                        <th onClick={() => this.headerClickHandle({column:"receiver"})}>Receiver</th>
+                        <th onClick={() => this.headerClickHandle({column:"Receiver"})}>Receiver</th>
                         <th>Timestamp</th>
                     </tr>
                     </thead>

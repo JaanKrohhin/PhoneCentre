@@ -109,6 +109,7 @@ namespace CallCentreTask.Data
                         }
                     }
                 }
+                Console.WriteLine("Database generated");
                 SaveChanges();
             }
 
