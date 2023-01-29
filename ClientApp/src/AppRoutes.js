@@ -1,6 +1,6 @@
-import Table from "./components/Table";
-import Detail from "./components/Detail";
-import HistoryPage from "./components/HistoryPage";
+import Table from "./components/RecordsQueryPage";
+import CallDetailPage from "./components/CallDetailPage";
+import HistoryOfCallsPage from "./components/HistoryOfCallsPage";
 
 //Define the routes of the application
 const AppRoutes = [
@@ -10,11 +10,11 @@ const AppRoutes = [
   },
   {
     path: 'details/:id',
-    element: <Detail />
+    element: <CallDetailPage />
   },
   {
     path: 'history/:id',
-    element: <HistoryPage />
+    element: <HistoryOfCallsPage />
   }
 ];
 

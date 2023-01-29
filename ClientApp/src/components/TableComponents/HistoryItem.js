@@ -1,20 +1,18 @@
 import {formatDate} from "./TableItem"
 
-export const HistoryItem = (parameters) =>{
+export const HistoryItem = (props) =>{
 
     //setiing the rwoItem from parameters
-    const rowItem = parameters.item;
-
-
+    const HistoryOfCallsArrayItem = props.item;
     function handleDate(){
         let pickUpIndex = 0
-        rowItem.forEach((item, index) => {
+        HistoryOfCallsArrayItem.forEach((item, index) => {
             if(item.record_Event_Id.trim() === "EVENT_PICK_UP"){
                 pickUpIndex = index
                 console.log(formatDate(item.record_Date))
             }
         })
-        return formatDate(rowItem[pickUpIndex].record_Date)
+        return formatDate(HistoryOfCallsArrayItem[pickUpIndex].record_Date)
     }
 
     //Function for calculating the duration of the call
@@ -23,7 +21,7 @@ export const HistoryItem = (parameters) =>{
         let callEnd = 0;
 
 
-        rowItem.forEach((item) => {
+        HistoryOfCallsArrayItem.forEach((item) => {
             if(item.record_Event_Id.trim() === "EVENT_CALL_ESTABLISHED"){
                 callStart = new Date(item.record_Date);
             }else if (item.record_Event_Id.trim() === "EVENT_CALL_END"){
@@ -51,9 +49,9 @@ export const HistoryItem = (parameters) =>{
 
     //Sets the type for the call
     function handleType() {
-        if (rowItem.length < 3){
+        if (HistoryOfCallsArrayItem.length < 3){
             return "Non-dialled call"
-        }else if (rowItem.length < 5){
+        }else if (HistoryOfCallsArrayItem.length < 5){
             return "Cancelled call"
         }else{
             return "Regular call"
@@ -63,7 +61,7 @@ export const HistoryItem = (parameters) =>{
         <tr>
             <td>{handleDate()}</td>
             <td>{handleTime()}</td>
-            <td>{rowItem[0].call_.receiver ? rowItem[0].call_.receiver : "---" }</td>
+            <td>{HistoryOfCallsArrayItem[0].call_.receiver ? HistoryOfCallsArrayItem[0].call_.receiver : "---" }</td>
             <td>{handleType()}</td>
         </tr>
     )

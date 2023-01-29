@@ -8,6 +8,8 @@ namespace PhoneCentre.Data
 {
 
     // "Implement proper code separation: Controllers must never access the database directly, instead they need to call a service class, which handles the database operations"
+
+
     public class EventService
     {
 
@@ -59,8 +61,7 @@ namespace PhoneCentre.Data
         /*
          * "Try implementing CSV export in a way that the data is streamed to user from the database, not all loaded into memory first"
          * 
-         * I believe I have improved it but I have no way to know since dealing with memory has never been never in my mindset, only when I was writing code for Arduino Uno with its small memory. 
-         * I do not know how to check this.
+         * I believe I have improved it but I have no way to know since dealing with memory has never been never in my mindset for studies, only when I was writing code for Arduino Uno with its small memory. 
          */
         public IQueryable<T_Event> GetCSVData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter)
         {
@@ -116,7 +117,7 @@ namespace PhoneCentre.Data
 
         public IQueryable<T_Event> FilterBySearch(IQueryable<T_Event> query, string searchString)
         {
-            query = query.Where(e => e.Call_.Caller_.ToString().Contains(searchString) || e.Call_.Receiver.ToString().Contains(searchString));
+            query = query.Where(e => e.Call_.Caller_.ToString().StartsWith(searchString) || e.Call_.Receiver.ToString().StartsWith(searchString));
             return query;
         }
 

@@ -12,7 +12,7 @@ internal static class EventServiceHelpers
 {
     public static Dictionary<string, Func<T_Event, object>> _sortColumns = new Dictionary<string, Func<T_Event, object>>
     {
-        { "Caller_", event_ => event_.Call_.Caller_ },
+        { "Caller", event_ => event_.Call_.Caller_ },
         { "Receiver", event_ => event_.Call_.Receiver },
     };
 
