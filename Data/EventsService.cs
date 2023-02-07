@@ -47,25 +47,27 @@ namespace PhoneCentre.Data
          * 
          * I believe I have improved it but I have no way to know since dealing with memory has never been never in my mindset for studies, only when I was writing code for Arduino Uno with its small memory. 
          */
-        public IQueryable<T_Event> GetCSVData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter)
+        public List<T_Event> GetCSVData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip, int dataChunkSize)
         {
             var query = db.Events.Include(Event => Event.Call_).Include(Event => Event.Event_Type);
 
             // apply filters and sort
-            return Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(query, sortColumn, searchString, sortDirection, eventTypefilter);
+            return Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(query, sortColumn, searchString, sortDirection, eventTypefilter, chunkSkip, dataChunkSize).ToList();
 
         }
 
 
 
-        public IQueryable<T_Event> Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(IQueryable<T_Event> query, string sortColumn, string searchString, string sortDirection, string[] eventTypefilter)
+        public IQueryable<T_Event> Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(IQueryable<T_Event> query, string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip, int dataChunkSize)
         {
 
             return query.SortByColumn(sortColumn, sortDirection)
 
                 .FilterBySearch(searchString)
 
-                .FilterByEventType(eventTypefilter);
+                .FilterByEventType(eventTypefilter)
+
+                .GetPage(dataChunkSize, chunkSkip);
 
         }
         public IQueryable<T_Event> SortByColumn(IQueryable<T_Event> query, string columnName, string columnDirection)

@@ -1,6 +1,7 @@
 ﻿using CallCentreTask.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using PhoneCentre.Data;
 using PhoneCentre.Models;
 
@@ -86,28 +87,37 @@ namespace PhoneCentre.Controllers
             // Creating a new memory stream
             var stream = new MemoryStream();
 
-            //Creating the csv writer (no using becasue of problems)
-            var writer = new StreamWriter(stream, leaveOpen: true);
 
+            var dataChunkSize = 150;
 
-            //Adding the headers
-            writer.WriteLine("Caller,Event,Receiver,Timestamp");
+            var chunkSkip = 1;
 
-
-            //Writing the data
-            var query = _eventsService.GetCSVData(sortColumn, searchString, sortDirection, eventTypefilter);
-
-
-            // Streaming data from the database
-            foreach (var eventItem in query)
+            List<T_Event> data;
+            //Creating the csv writer
+            using (var writer = new StreamWriter(stream, leaveOpen: true))
             {
-                writer.WriteLine(eventItem.FormatToCvsString());
+                //Adding the headers
+                writer.WriteLine("Caller,Event,Receiver,Timestamp");
+
+
+                //Writing the data
+                do
+                {
+                    //Getting the data in chunks instead of the whole
+                    data = _eventsService.GetCSVData(sortColumn, searchString, sortDirection, eventTypefilter, chunkSkip, dataChunkSize);
+
+                    chunkSkip++;
+
+                    foreach (T_Event eventItem in data)
+                    {
+                        writer.WriteLine(eventItem.FormatToCvsString());
+                    }
+
+                } while (data.Count == dataChunkSize);
+
+
+
             }
-
-
-            // Closing | Disposing of the StreamWriter
-            writer.Close();
-
 
             //Setting the position of the stream to the beginning
             stream.Position = 0;
@@ -116,6 +126,8 @@ namespace PhoneCentre.Controllers
 
             //Returning the file
             return file;
+
+
         }
 
 

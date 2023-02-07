@@ -22,14 +22,9 @@ internal static class EventServiceHelpers
     };
 
 
-
-
     public static IQueryable<T_Event> SortByColumn(this IQueryable<T_Event> query, string columnName, string columnDirection)
     {
         var ascending = columnDirection == "asc";
-
-        //var property = typeof(Call).GetProperty(columnName);
-        //return (ascending ? query.OrderBy(keySelector: Event => property.GetValue(Event.Call_)) : query.OrderByDescending(keySelector: Event => property.GetValue(Event.Call_))).ToList();
 
         return (ascending ? query.OrderBy(_sortColumns[columnName]) : query.OrderByDescending(_sortColumns[columnName])).AsQueryable();
     }
@@ -68,13 +63,15 @@ internal static class EventServiceHelpers
     public static IQueryable<T_Event> GetPage(this IQueryable<T_Event> query, int sizeOfPage, int numberOfPagesToSkips)
     {
         return query.Skip((numberOfPagesToSkips - 1) * sizeOfPage)
+
                     .Take(sizeOfPage)
+
                     .AsQueryable();
     }
 
 
 
-    //Reflection attempt, causes an error
+    //Reflection attempts, causes an error
 
     /*
     public static IQueryable<T_Event> SortByColumn(this IQueryable<T_Event> query, string columnName, bool ascending)
@@ -98,5 +95,16 @@ internal static class EventServiceHelpers
 
         return query.Provider.CreateQuery<T_Event>(orderByCall);
     }*/
+
+
+
+    //public static IQueryable<T_Event> SortByColumn(this IQueryable<T_Event> query, string columnName, string columnDirection)
+    //{
+    //    var ascending = columnDirection == "asc";
+    //    var property = typeof(Call).GetProperty(columnName);
+    //    return (ascending ? query.OrderBy(keySelector: Event => property.GetValue(Event.Call_)) : query.OrderByDescending(keySelector: Event => property.GetValue(Event.Call_))).AsQueryable();
+    //}
+
+
 
 }
