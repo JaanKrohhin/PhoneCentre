@@ -69,7 +69,9 @@ class RecordsQueryPage extends React.Component {
 
     //On click, fetches the sorted and filtered data as an .csv file
     exportData = () => {
+
         let typeFilter = this.state.checkedState.join("-");
+
         window.open(`events/download/${this.state.sortColumnName}/${this.state.sortDirection}+${this.state.search}+${typeFilter}`, "_blank");
     }
 
@@ -95,10 +97,11 @@ class RecordsQueryPage extends React.Component {
     headerClickHandle = (event) => {
 
         let sortColumnName = event.column;
+
         let sortDirection = this.state.sortDirection === "asc" ? "desc" : "asc";
 
-        this.setState({sortColumnName: sortColumnName, sortDirection: sortDirection});
-        console.log("header data")
+        this.setState({ sortColumnName: sortColumnName, sortDirection: sortDirection });
+
         this.getEventData(this.state.selectedSize, this.state.pageNumber, sortColumnName, sortDirection);
     }
 

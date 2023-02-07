@@ -61,7 +61,7 @@ namespace CallCentreTask.Data
                     {
                         currentCall = new Call
                         {
-                            Caller_ = caller,
+                            Caller = caller,
                         };
 
 

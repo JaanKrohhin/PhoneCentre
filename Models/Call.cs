@@ -11,7 +11,7 @@ namespace PhoneCentre.Models
         
 
         [Column("CALLER")]
-        public int Caller_ { get; set; }
+        public int Caller { get; set; }
         
         
         [Column("RECEIVER")]

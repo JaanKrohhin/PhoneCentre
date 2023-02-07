@@ -7,7 +7,7 @@ export const TableItem = (parameters) =>{
     //Handles the redirection to the detail page and all calls page
     const routeChange = (e) =>{
         if (e.target.dataset.caller === "true"){
-            let path = `history/${rowItem.call_.caller_}`;
+            let path = `history/${rowItem.call_.caller}`;
             window.open(path, "_blank");
         }else {
             let path = `details/${rowItem.call_Id}`;
@@ -20,7 +20,7 @@ export const TableItem = (parameters) =>{
     if (rowType === "detail" ){
         return (
             <tr>
-                <td>{rowItem.call_.caller_ ? rowItem.call_.caller_ : "---" }</td>
+                <td>{rowItem.call_.caller ? rowItem.call_.caller : "---" }</td>
                 <td>{rowItem.event_Type.event_Type}</td>
                 <td>{rowItem.call_.receiver ? rowItem.call_.receiver : "---"}</td>
                 <td>{formatDate(rowItem.record_Date)}</td>
@@ -30,7 +30,7 @@ export const TableItem = (parameters) =>{
     else {
         return (
             <tr onClick={(e) => routeChange(e)}>
-                <td data-caller="true">{rowItem.call_.caller_ ? rowItem.call_.caller_ : "---"}</td>
+                <td data-caller="true">{rowItem.call_.caller ? rowItem.call_.caller : "---"}</td>
                 <td data-caller="false">{rowItem.event_Type.event_Type}</td>
                 <td data-caller="false">{rowItem.call_.receiver ? rowItem.call_.receiver : "---"}</td>
                 <td data-caller="false">{formatDate(rowItem.record_Date)}</td>

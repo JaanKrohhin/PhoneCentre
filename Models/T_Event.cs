@@ -25,7 +25,7 @@ namespace PhoneCentre.Models
 
         public string FormatToCvsString()
         {
-            string caller = Call_.Caller_.ToString();
+            string caller = Call_.Caller.ToString();
             string receiver = Call_.Receiver.ToString();
             string event_ = Event_Type.Event_Type.Trim();
             string date = Record_Date.ToString("dd-MM-yyyy HH:mm:ss");

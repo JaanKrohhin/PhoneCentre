@@ -157,14 +157,11 @@ namespace PhoneCentre.Controllers
         
         private T_Event[] GetFilteredAndSortedData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int pageNumber, int rowSize)
         {
-            var eventsArray = _eventsService.GetDataFilteredByEvent(pageNumber, rowSize, eventTypefilter);
+            var eventsArray = _eventsService.GetDataFilteredByEvent(pageNumber, rowSize, eventTypefilter)
 
-            if (searchString != "")
-            {
-                eventsArray = _eventsService.FilterBySearch(eventsArray, searchString);
-            }
+                .FilterBySearch(searchString)
 
-            eventsArray = _eventsService.SortByColumn(eventsArray, sortColumn, sortDirection);
+                .SortByColumn(sortColumn, sortDirection);
 
             return eventsArray.ToArray();
         }
