@@ -53,6 +53,8 @@ namespace PhoneCentre.Data
          */
         public List<T_Event> GetCSVData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip)
         {
+
+            //Percentage of all the stored Events in decimals to get
             var chunkPercentage = 0.1;
 
 
