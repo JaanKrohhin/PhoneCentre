@@ -4,13 +4,12 @@ import {SearchBar} from "./TableExtras/Search";
 import {TableFooter} from "./TableExtras/TableFooter";
 import React from "react";
 import {ExportButton} from "./TableExtras/ExportButton";
-export default function Table({Title, IsHistoryTable, RowsData, HeaderClick, SearchHandler, FooterHandlers, IsMainTable, RowSizes, SelectedRowSize, CheckedStateOfEvents, ExportHandle}) {
+export default function Table({Title, RowsData, HeaderClick, SearchHandler, FooterHandlers, IsMainTable, RowSizes, SelectedRowSize, CheckedStateOfEvents, ExportHandle, ColumnNames, IsHistory }) {
     let isMain = IsMainTable
     let title = Title
-    let isHistory = IsHistoryTable
     let data = RowsData
-    let columnNames = isHistory ? ["Timestamp","Talk Duration","Receiver","Type"] : ["Caller","Event","Receiver","Timestamp"]
-
+    let columnNames = ColumnNames
+    let isHistory = IsHistory
 
     return (
         <div className="table-wrapper">
@@ -26,12 +25,3 @@ export default function Table({Title, IsHistoryTable, RowsData, HeaderClick, Sea
         </div>
     )
 }
-/*
-"Implement a flexible table component that can be reused on all pages,
-all the markup and logic related to drawing the table needs to be in this component"
-
-Quite frankly I knew this was a problem when I did this project.
-I have always done poorly with frontend because I don't have a creative mind needed for design.
-And React is definitely something I haven't used much. However, I am satisfied with this "rework" (at least more than the previous one).
-
-*/

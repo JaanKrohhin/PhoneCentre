@@ -1,6 +1,4 @@
 import React from "react";
-import {TableItem} from "./TableComponents/TableItem";
-import {events} from "./eventTypes";
 import Table from "./TableComponents/Table";
 
 
@@ -24,7 +22,7 @@ class RecordsQueryPage extends React.Component {
         }
     }
 
-    //Method, which retrieves the data from the backend. The data is then set to the state. Is used after every state change(I had problems with the state not updating properly and this solution worked)
+    //Method, which retrieves the data from the backend. The data is then set to the state. It Is used after every state change
     getEventData(selectedSize, pageNumber, sortColumnName, sortDirection = this.state.sortDirection, search = this.state.search, eventType = this.state.checkedState) {
         let typeFilter = eventType.join("-");
 
@@ -40,30 +38,6 @@ class RecordsQueryPage extends React.Component {
 
         this.getEventData(this.state.selectedSize,this.state.pageNumber, this.state.sortColumnName, this.state.sortDirection, this.state.search, this.state.checkedState);
     }
-
-
-    //The Table
-    render() {
-        if (this.state.data === null){
-            return <div>Loading...</div>
-        }
-        return (
-            <Table
-                IsMainTable={true}
-                HeaderClick={this.headerClickHandle}
-                RowsData={this.state.data} Title={title}
-                SearchHandler={this.searchFor}
-                CheckedStateOfEvents={this.state.checkedState}
-                RowSizes={this.state.rowSizes}
-                SelectedRowSize={this.state.selectedSize}
-                FooterHandlers={this.footerHandlers}
-                ExportHandle={this.exportData}
-            />
-        );
-  }
-
-
-
 
 
 
@@ -182,6 +156,37 @@ class RecordsQueryPage extends React.Component {
 
 
     }
+
+
+
+    //The Table
+    render() {
+        if (this.state.data === null){
+            return <div>Loading...</div>
+        }
+
+        let columnNames = ['Caller','Event', 'Receiver','Timestamp']
+
+        return (
+            <Table
+                IsMainTable={true}
+                DetailView={false}
+                HeaderClick={this.headerClickHandle}
+                RowsData={this.state.data}
+                Title={title}
+                SearchHandler={this.searchFor}
+                CheckedStateOfEvents={this.state.checkedState}
+                RowSizes={this.state.rowSizes}
+                SelectedRowSize={this.state.selectedSize}
+                FooterHandlers={this.footerHandlers}
+                ExportHandle={this.exportData}
+                ColumnNames={columnNames}
+            />
+        );
+    }
+
+
+
 
 }
 export default RecordsQueryPage;

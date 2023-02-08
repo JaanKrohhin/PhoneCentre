@@ -3,7 +3,6 @@ import React from "react";
 export const TableItem = (parameters) =>{
     const rowItem = parameters.item.item;
     const rowType = parameters.item.type;
-
     //Handles the redirection to the detail page and all calls page
     const routeChange = (e) =>{
         if (e.target.dataset.caller === "true"){

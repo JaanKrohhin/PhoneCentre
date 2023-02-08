@@ -1,5 +1,4 @@
 import React from "react";
-import {HistoryItem} from "./TableComponents/HistoryItem";
 import Table from "./TableComponents/Table";
 
 //Component for the all calls page
@@ -30,9 +29,13 @@ class HistoryOfCallsPage extends React.Component{
                 </div>
             )
         } else{
-            var title = this.state.data[0][0].call_.caller_+"#:All calls"
+
+
+            var title = this.state.data[0][0].call_.caller+"#:All calls"
+            var columnNames = ["Timestamp","Talk Duration","Receiver","Type"]
+
             return (
-                <Table IsHistoryTable={true} RowsData={this.state.data} Title={title} />
+                <Table IsMainTable={false} RowsData={this.state.data} Title={title} ColumnNames={columnNames} IsHistory={true}/>
             )
         }
     }

@@ -4,6 +4,7 @@ export const HistoryItem = (props) =>{
 
     //setiing the rwoItem from parameters
     const HistoryOfCallsArrayItem = props.item;
+    console.table(HistoryOfCallsArrayItem)
     function handleDate(){
         let pickUpIndex = 0
         HistoryOfCallsArrayItem.forEach((item, index) => {
@@ -22,10 +23,15 @@ export const HistoryItem = (props) =>{
 
 
         HistoryOfCallsArrayItem.forEach((item) => {
+
             if(item.record_Event_Id.trim() === "EVENT_CALL_ESTABLISHED"){
+
                 callStart = new Date(item.record_Date);
+
             }else if (item.record_Event_Id.trim() === "EVENT_CALL_END"){
+
                 callEnd = new Date(item.record_Date);
+
             }
         })
 
@@ -57,11 +63,15 @@ export const HistoryItem = (props) =>{
             return "Regular call"
         }
     }
+
+    let historyReceiver = HistoryOfCallsArrayItem[0].call_.receiver ? HistoryOfCallsArrayItem[0].call_.receiver : "---"
+
+
     return(
         <tr>
             <td>{handleDate()}</td>
             <td>{handleTime()}</td>
-            <td>{HistoryOfCallsArrayItem[0].call_.receiver ? HistoryOfCallsArrayItem[0].call_.receiver : "---" }</td>
+            <td>{historyReceiver}</td>
             <td>{handleType()}</td>
         </tr>
     )
