@@ -104,7 +104,7 @@ namespace PhoneCentre.Controllers
                 do
                 {
                     //Getting the data in chunks instead of the whole
-                    data = _eventsService.GetCSVData(sortColumn, searchString, sortDirection, eventTypefilter, chunkSkip, dataChunkSize);
+                    data = _eventsService.GetCSVData(sortColumn, searchString, sortDirection, eventTypefilter, chunkSkip);
 
                     chunkSkip++;
 
@@ -169,11 +169,7 @@ namespace PhoneCentre.Controllers
         
         private T_Event[] GetFilteredAndSortedData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int pageNumber, int rowSize)
         {
-            var eventsArray = _eventsService.GetDataFilteredByEvent(pageNumber, rowSize, eventTypefilter)
-
-                .FilterBySearch(searchString)
-
-                .SortByColumn(sortColumn, sortDirection);
+            var eventsArray = _eventsService.GetData(searchString, eventTypefilter, sortColumn, sortDirection, pageNumber, rowSize);
 
             return eventsArray.ToArray();
         }

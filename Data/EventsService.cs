@@ -31,7 +31,7 @@ namespace PhoneCentre.Data
             I have no clue, if this is the correct way to interpet sorting said by the task.
         
          */
-        public IQueryable<T_Event> GetDataFilteredByEvent(int numberOfSkips, int size, string[] eventTypefilter)
+        public IQueryable<T_Event> GetData(string searchString, string[] eventTypefilter, string sortColumn, string sortDirection, int numberOfSkips, int size)
         {
 
                 return db.Events.Include(Event => Event.Call_)
@@ -40,6 +40,10 @@ namespace PhoneCentre.Data
 
                     .FilterByEventType(eventTypefilter)
 
+                    .FilterBySearch(searchString)
+                    
+                    .SortByColumn(sortColumn, sortDirection)
+
                     .GetPage(size, numberOfSkips);
         }
         /*
@@ -47,29 +51,28 @@ namespace PhoneCentre.Data
          * 
          * I believe I have improved it but I have no way to know since dealing with memory has never been never in my mindset for studies, only when I was writing code for Arduino Uno with its small memory. 
          */
-        public List<T_Event> GetCSVData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip, int dataChunkSize)
+        public List<T_Event> GetCSVData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip)
         {
-            var query = db.Events.Include(Event => Event.Call_).Include(Event => Event.Event_Type);
+            var chunkPercentage = 0.1;
 
-            // apply filters and sort
-            return Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(query, sortColumn, searchString, sortDirection, eventTypefilter, chunkSkip, dataChunkSize).ToList();
+
+            //The chunk size
+            int dataChunkSize = (int)(db.Events.Count() * chunkPercentage);
+
+
+
+            var query = GetData(searchString, eventTypefilter,sortColumn,sortDirection, chunkSkip, dataChunkSize)
+
+                        .ToList();
+            
+            
+            return query;
 
         }
 
 
 
-        public IQueryable<T_Event> Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(IQueryable<T_Event> query, string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip, int dataChunkSize)
-        {
-
-            return query.SortByColumn(sortColumn, sortDirection)
-
-                .FilterBySearch(searchString)
-
-                .FilterByEventType(eventTypefilter)
-
-                .GetPage(dataChunkSize, chunkSkip);
-
-        }
+        
         public IQueryable<T_Event> SortByColumn(IQueryable<T_Event> query, string columnName, string columnDirection)
         {
             //Determine in which order the columns will go

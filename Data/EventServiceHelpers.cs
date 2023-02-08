@@ -69,7 +69,18 @@ internal static class EventServiceHelpers
                     .AsQueryable();
     }
 
+    public static IQueryable<T_Event> Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(this IQueryable<T_Event> query, string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip, int dataChunkSize)
+    {
 
+        return query.SortByColumn(sortColumn, sortDirection)
+
+            .FilterBySearch(searchString)
+
+            .FilterByEventType(eventTypefilter)
+
+            .GetPage(dataChunkSize, chunkSkip);
+
+    }
 
     //Reflection attempts, causes an error
 
