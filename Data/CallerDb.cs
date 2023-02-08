@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using PhoneCentre.Models;
-using System;
 
 namespace CallCentreTask.Data
 {

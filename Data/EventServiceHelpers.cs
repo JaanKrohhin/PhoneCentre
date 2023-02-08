@@ -1,35 +1,18 @@
 ﻿using PhoneCentre.Models;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 
-/*
- * "Implement sorting with a custom flexible extension method, without if/else or switch"
- * 
- *  Using a dictionary with the column names as the keys, and the actual object to sort by. 
- *      
- *  
- */
+
 internal static class EventServiceHelpers
 {
-    public static Dictionary<string, Func<T_Event, object>> _sortColumns = new Dictionary<string, Func<T_Event, object>>
-    {
-        { "Caller", event_ => event_.Call_.Caller },
-        { "Receiver", event_ => event_.Call_.Receiver },
-    };
-
-
-    public static IQueryable<T_Event> SortByColumn(this IQueryable<T_Event> query, string columnName, string columnDirection)
+    public static IEnumerable<T_Event> SortByColumn(this IEnumerable<T_Event> query, string columnName, string columnDirection)
     {
         var ascending = columnDirection == "asc";
 
-        return (ascending ? query.OrderBy(_sortColumns[columnName]) : query.OrderByDescending(_sortColumns[columnName])).AsQueryable();
+        var fullName = "Call_." + columnName;
+
+        return (ascending ? query.OrderBy(e => GetPropertyValue(e, fullName)) : query.OrderByDescending(e => GetPropertyValue(e, fullName))).AsEnumerable();
     }
     
-    public static IQueryable<T_Event> FilterByEventType(this IQueryable<T_Event> query, string[] eventTypefilter)
+    public static IEnumerable<T_Event> FilterByEventType(this IEnumerable<T_Event> query, string[] eventTypefilter)
     {
 
         if (eventTypefilter.Any(EventType => EventType != ""))
@@ -47,7 +30,7 @@ internal static class EventServiceHelpers
 
     }
 
-    public static IQueryable<T_Event> FilterBySearch(this IQueryable<T_Event> query, string searchString)
+    public static IEnumerable<T_Event> FilterBySearch(this IEnumerable<T_Event> query, string searchString)
     {
         if (!string.IsNullOrEmpty(searchString))
         {
@@ -60,16 +43,16 @@ internal static class EventServiceHelpers
         }
     }
 
-    public static IQueryable<T_Event> GetPage(this IQueryable<T_Event> query, int sizeOfPage, int numberOfPagesToSkips)
+    public static IEnumerable<T_Event> GetPage(this IEnumerable<T_Event> query, int sizeOfPage, int numberOfPagesToSkips)
     {
         return query.Skip((numberOfPagesToSkips - 1) * sizeOfPage)
 
                     .Take(sizeOfPage)
 
-                    .AsQueryable();
+                    .AsEnumerable();
     }
 
-    public static IQueryable<T_Event> Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(this IQueryable<T_Event> query, string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip, int dataChunkSize)
+    public static IEnumerable<T_Event> Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(this IEnumerable<T_Event> query, string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip, int dataChunkSize)
     {
 
         return query.SortByColumn(sortColumn, sortDirection)
@@ -82,10 +65,26 @@ internal static class EventServiceHelpers
 
     }
 
+    public static object GetPropertyValue(object src, string propName)
+    {
+        if (src == null) throw new ArgumentException("Value cannot be null.", "src");
+        if (propName == null) throw new ArgumentException("Value cannot be null.", "propName");
+
+        if (propName.Contains("."))//complex type nested
+        {
+            var temp = propName.Split(new char[] { '.' }, 2);
+            return GetPropertyValue(GetPropertyValue(src, temp[0]), temp[1]);
+        }
+        else
+        {
+            var prop = src.GetType().GetProperty(propName);
+            return prop != null ? prop.GetValue(src, null) : null;
+        }
+    }
     //Reflection attempts, causes an error
 
     /*
-    public static IQueryable<T_Event> SortByColumn(this IQueryable<T_Event> query, string columnName, bool ascending)
+    public static IEnumerable<T_Event> SortByColumn(this IEnumerable<T_Event> query, string columnName, bool ascending)
     {
         PropertyInfo property = typeof(Call).GetProperty(columnName);
         if (property == null)
@@ -109,11 +108,11 @@ internal static class EventServiceHelpers
 
 
 
-    //public static IQueryable<T_Event> SortByColumn(this IQueryable<T_Event> query, string columnName, string columnDirection)
+    //public static IEnumerable<T_Event> SortByColumn(this IEnumerable<T_Event> query, string columnName, string columnDirection)
     //{
     //    var ascending = columnDirection == "asc";
     //    var property = typeof(Call).GetProperty(columnName);
-    //    return (ascending ? query.OrderBy(keySelector: Event => property.GetValue(Event.Call_)) : query.OrderByDescending(keySelector: Event => property.GetValue(Event.Call_))).AsQueryable();
+    //    return (ascending ? query.OrderBy(keySelector: Event => property.GetValue(Event.Call_)) : query.OrderByDescending(keySelector: Event => property.GetValue(Event.Call_))).AsEnumerable();
     //}
 
 

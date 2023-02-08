@@ -31,7 +31,7 @@ namespace PhoneCentre.Data
             I have no clue, if this is the correct way to interpet sorting said by the task.
         
          */
-        public IQueryable<T_Event> GetData(string searchString, string[] eventTypefilter, string sortColumn, string sortDirection, int numberOfSkips, int size)
+        public IEnumerable<T_Event> GetData(string searchString, string[] eventTypefilter, string sortColumn, string sortDirection, int numberOfSkips, int size)
         {
 
                 return db.Events.Include(Event => Event.Call_)
@@ -46,12 +46,11 @@ namespace PhoneCentre.Data
 
                     .GetPage(size, numberOfSkips);
         }
-        /*
-         * "Try implementing CSV export in a way that the data is streamed to user from the database, not all loaded into memory first"
-         * 
-         * I believe I have improved it but I have no way to know since dealing with memory has never been never in my mindset for studies, only when I was writing code for Arduino Uno with its small memory. 
-         */
-        public List<T_Event> GetCSVData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip)
+
+
+
+
+        public IEnumerable<T_Event> GetCSVData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip)
         {
 
             //Percentage of all the stored Events in decimals to get
@@ -63,9 +62,8 @@ namespace PhoneCentre.Data
 
 
 
-            var query = GetData(searchString, eventTypefilter,sortColumn,sortDirection, chunkSkip, dataChunkSize)
+            var query = GetData(searchString, eventTypefilter,  sortColumn, sortDirection, chunkSkip, dataChunkSize).AsEnumerable();
 
-                        .ToList();
             
             
             return query;
@@ -75,7 +73,7 @@ namespace PhoneCentre.Data
 
 
         
-        public IQueryable<T_Event> SortByColumn(IQueryable<T_Event> query, string columnName, string columnDirection)
+        public IEnumerable<T_Event> SortByColumn(IEnumerable<T_Event> query, string columnName, string columnDirection)
         {
             //Determine in which order the columns will go
 

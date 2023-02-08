@@ -22,7 +22,6 @@ namespace PhoneCentre.Controllers
 
         #region Http get methods of the API
 
-        
 
         /// <summary>
         /// Gets all events from the database and returns them sorted by the parameters
@@ -92,7 +91,7 @@ namespace PhoneCentre.Controllers
 
             var chunkSkip = 1;
 
-            List<T_Event> data;
+            IEnumerable<T_Event> data;
             //Creating the csv writer
             using (var writer = new StreamWriter(stream, leaveOpen: true))
             {
@@ -104,7 +103,7 @@ namespace PhoneCentre.Controllers
                 do
                 {
                     //Getting the data in chunks instead of the whole
-                    data = _eventsService.GetCSVData(sortColumn, searchString, sortDirection, eventTypefilter, chunkSkip);
+                    data = _eventsService.GetCSVData(sortColumn, searchString, sortDirection, eventTypefilter, chunkSkip).AsEnumerable();
 
                     chunkSkip++;
 
@@ -113,7 +112,7 @@ namespace PhoneCentre.Controllers
                         writer.WriteLine(eventItem.FormatToCvsString());
                     }
 
-                } while (data.Count == dataChunkSize);
+                } while (data.Count() == dataChunkSize);
 
 
 
