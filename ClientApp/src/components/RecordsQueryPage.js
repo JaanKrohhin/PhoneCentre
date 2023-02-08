@@ -2,11 +2,12 @@ import React from "react";
 import Table from "./TableComponents/Table";
 
 
-
 const title = "Records Query"
+const pageReset = 1;
 
 //The main component that renders the table. Records Query
 class RecordsQueryPage extends React.Component {
+    static firstRender = true;
     //defining the state
     constructor(props) {
         super(props);
@@ -15,7 +16,7 @@ class RecordsQueryPage extends React.Component {
             sortColumnName: "Caller",
             rowSizes: [5,10,25],
             selectedSize: 5,
-            pageNumber: 1,
+            pageNumber: pageReset,
             sortDirection: "asc",
             search: "",
             checkedState: ["","","","",""]
@@ -23,23 +24,20 @@ class RecordsQueryPage extends React.Component {
     }
 
     //Method, which retrieves the data from the backend. The data is then set to the state. It Is used after every state change
-    getEventData(selectedSize, pageNumber, sortColumnName, sortDirection = this.state.sortDirection, search = this.state.search, eventType = this.state.checkedState) {
-        let typeFilter = eventType.join("-");
+    getEventData = (selectedSize = this.state.selectedSize,pageNumber = this.state.pageNumber
+                    ,sortColumnName = this.state.sortColumnName, sortDirection = this.state.sortDirection
+                    , search = this.state.search, typeFilter = this.state.checkedState.join("-")) => {
 
         fetch(`events/${selectedSize}/${pageNumber}/${sortColumnName}/${sortDirection}+${search}+${typeFilter}`)
             .then(response => response.json())
-            .then(data => {{
-                this.setState({data: data});
-            }
+            .then(fetchedData => {
+                this.setState({ data: fetchedData});
             });
     }
 
     componentDidMount() {
-
-        this.getEventData(this.state.selectedSize,this.state.pageNumber, this.state.sortColumnName, this.state.sortDirection, this.state.search, this.state.checkedState);
+        this.getEventData();
     }
-
-
 
     //On click, fetches the sorted and filtered data as an .csv file
     exportData = () => {
@@ -54,14 +52,19 @@ class RecordsQueryPage extends React.Component {
 
     //On change, gets the new search value and fetches the data with the new search value. Always goes to the first page.
     searchFor = (event) => {
-        console.log(event)
-        console.log(event.target.value)
+
         let value = event.target.value;
-        this.setState({
-            pageNumber: 1,
-            search: value
+
+        this.setState(() => {
+            return {
+                pageNumber: pageReset,
+                search: value
+            }
         });
-        this.getEventData(this.state.selectedSize, 1, this.state.sortColumnName, this.state.sortDirection, value);
+
+        this.getEventData(this.state.selectedSize,this.state.pageNumber
+            ,this.state.sortColumnName, this.state.sortDirection
+            , value, this.state.checkedState.join("-"))
     }
 
 
@@ -74,9 +77,15 @@ class RecordsQueryPage extends React.Component {
 
         let sortDirection = this.state.sortDirection === "asc" ? "desc" : "asc";
 
-        this.setState({ sortColumnName: sortColumnName, sortDirection: sortDirection });
+        this.setState(() => {
+            return {
+                sortColumnName: sortColumnName, sortDirection: sortDirection
+            }
+        });
 
-        this.getEventData(this.state.selectedSize, this.state.pageNumber, sortColumnName, sortDirection);
+        this.getEventData(this.state.selectedSize,this.state.pageNumber
+            ,sortColumnName, sortDirection
+            , this.state.search, this.state.checkedState.join("-"))
     }
 
 
@@ -102,11 +111,16 @@ class RecordsQueryPage extends React.Component {
             });
 
 
-            this.setState({
-                checkedState: newFilter,
-                pageNumber: 1
+            this.setState(() => {
+                return {
+                    checkedState: newFilter,
+                    pageNumber: pageReset
+                }
             });
-            this.getEventData(this.state.selectedSize, 1, this.state.sortColumnName, this.state.sortDirection, this.state.search, newFilter);
+
+            this.getEventData(this.state.selectedSize,pageReset
+                ,this.state.sortColumnName, this.state.sortDirection
+                , this.state.search, newFilter.join("-"))
         },
 
 
@@ -122,21 +136,34 @@ class RecordsQueryPage extends React.Component {
                 .then(response => response.json())
                 .then(nextPage => {
                     if (nextPage.length > 0) {
-                        this.setState({data: nextPage, pageNumber: value});
+                        let newpageNumber = 0
+                        this.setState((prevState) => {
+                            newpageNumber = prevState.pageNumber + 1
+                            return {
+                                data: nextPage,
+                                pageNumber: newpageNumber
+                            };
+                        });
                     }
                 });
+
+
         },
 
 
 
         //On click, fetches the last page. If the page number is 0 returns to the first page. Else, decrements the page number and updates the data
         previousPageHandle: () => {
-            let value = this.state.pageNumber - 1 !== 0 ? this.state.pageNumber - 1 : 1
-
-            this.setState((state) => ({
-                pageNumber: value
-            }))
-            this.getEventData(this.state.selectedSize,value, this.state.sortColumnName);
+            this.setState((prevState) => {
+                let value =
+                    prevState.pageNumber - 1 !== 0 ? prevState.pageNumber - 1 : 1;
+                this.getEventData(this.state.selectedSize,value
+                    ,this.state.sortColumnName, this.state.sortDirection
+                    , this.state.search, this.state.checkedState.join("-"))
+                return {
+                    pageNumber: value
+                };
+            });
         },
 
 
@@ -144,14 +171,17 @@ class RecordsQueryPage extends React.Component {
 
         //On selection, sets the new size and fetches the data for the new size. Always goes to the first page.
         updateSelectedSize: (event) => {
-            let size = parseInt(event.target.value);
+            let size = parseInt(event.target.value, 10);
 
-            this.setState((state) => ({
-                selectedSize: size,
-                pageNumber: 1
-            }));
-
-            this.getEventData(size, 1, this.state.sortColumnName);
+            this.setState(() => {
+                return {
+                    selectedSize: size,
+                    pageNumber: pageReset
+                 }
+            });
+            this.getEventData(size,this.state.pageNumber
+                ,this.state.sortColumnName, this.state.sortDirection
+                , this.state.search, this.state.checkedState.join("-"))
         },
 
 
