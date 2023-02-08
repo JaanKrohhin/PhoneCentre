@@ -1,6 +1,8 @@
 import React from "react";
 import Table from "./TableComponents/Table";
 
+const columnNames = ["Timestamp", "Talk Duration", "Receiver", "Type"]
+
 //Component for the all calls page
 class HistoryOfCallsPage extends React.Component{
 
@@ -17,7 +19,7 @@ class HistoryOfCallsPage extends React.Component{
     componentDidMount() {
         fetch("events/history/" + this.state.number)
             .then(response => response.json())
-            .then(data => this.setState({data: data}))
+            .then((fetchedData) => this.setState({ data: fetchedData }))
     }
 
     render() {
@@ -30,9 +32,8 @@ class HistoryOfCallsPage extends React.Component{
             )
         } else{
 
+            var title = this.state.data[0][0].call_.caller + "#:All calls"
 
-            var title = this.state.data[0][0].call_.caller+"#:All calls"
-            var columnNames = ["Timestamp","Talk Duration","Receiver","Type"]
 
             return (
                 <Table IsMainTable={false} RowsData={this.state.data} Title={title} ColumnNames={columnNames} IsHistory={true}/>
