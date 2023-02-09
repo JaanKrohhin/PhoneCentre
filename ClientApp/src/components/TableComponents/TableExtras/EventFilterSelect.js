@@ -1,11 +1,11 @@
 import React from "react";
-import {events} from "../../eventTypes";
+import { events } from "../../eventTypes";
 export const EventFilter = ({ EventFilterHandle, CheckedStateOfEvents }) => {
     return (
         <div id={"event-filter"}>
             {events.map((event, index) => {
                 return (
-                    <div>
+                    <div key={index}>
                         <input
                             type="checkbox"
                             onChange={(event) => EventFilterHandle(index, event)}
@@ -16,8 +16,8 @@ export const EventFilter = ({ EventFilterHandle, CheckedStateOfEvents }) => {
                         />
                         <label htmlFor={event.id}>{event.name}</label>
                     </div>
-                )
+                );
             })}
         </div>
-    )
-}
+    );
+};
