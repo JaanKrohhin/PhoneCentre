@@ -11,13 +11,6 @@
     padding: 10px;
 }
 
-.loadingDiv {
-    width: auto;
-    margin: auto;
-    font-size: 14px;
-    font-weight: bold;
-}
-
 .main-table {
     thead {
         th {
@@ -52,6 +45,13 @@
     max-width: 100%;
     white-space: nowrap;
     background-color: white;
+
+    .loadingDiv {
+        width: auto;
+        margin: auto;
+        font-size: 18px;
+        font-weight: bold;
+    }
 
     td {
         text-align: center;
