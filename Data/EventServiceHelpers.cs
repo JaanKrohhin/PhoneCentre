@@ -9,7 +9,7 @@ internal static class EventServiceHelpers
 
         var fullName = "Call_." + columnName;
 
-        return (ascending ? query.OrderBy(e => GetPropertyValue(e, fullName)) : query.OrderByDescending(e => GetPropertyValue(e, fullName))).AsEnumerable();
+        return (ascending ? query.OrderBy(event_ => GetPropertyValue(event_, fullName)) : query.OrderByDescending(event_ => GetPropertyValue(event_, fullName))).AsEnumerable();
     }
     
     public static IEnumerable<T_Event> FilterByEventType(this IEnumerable<T_Event> query, string[] eventTypefilter)
