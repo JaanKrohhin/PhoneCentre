@@ -5,6 +5,7 @@ import Table from "./TableComponents/Table";
 const title = "Records Query"
 const pageReset = 1;
 
+
 //The main component that renders the table. Records Query
 class RecordsQueryPage extends React.Component {
     static firstRender = true;
@@ -24,9 +25,8 @@ class RecordsQueryPage extends React.Component {
     }
 
     //Method, which retrieves the data from the backend. The data is then set to the state. It Is used after every state change
-    getEventData = (selectedSize = this.state.selectedSize,pageNumber = this.state.pageNumber
-                    ,sortColumnName = this.state.sortColumnName, sortDirection = this.state.sortDirection
-                    , search = this.state.search, typeFilter = this.state.checkedState.join("-")) => {
+    getEventData(selectedSize, pageNumber, sortColumnName, sortDirection = this.state.sortDirection, search = this.state.search, eventType = this.state.checkedState) {
+        let typeFilter = eventType.join("-");
 
         fetch(`events/${selectedSize}/${pageNumber}/${sortColumnName}/${sortDirection}+${search}+${typeFilter}`)
             .then(response => response.json())

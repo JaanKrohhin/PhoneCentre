@@ -10,7 +10,7 @@ class CallDetailPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
+            data: null,
             id: window.location.pathname.split("/")[2],
         }
     }
