@@ -1,18 +1,22 @@
-﻿using PhoneCentre.Models;
+﻿using System.Linq.Dynamic.Core;
+using PhoneCentre.Models;
 
-
-internal static class EventServiceHelpers
+public static class EventServiceHelpers
 {
-    public static IEnumerable<T_Event> SortByColumn(this IEnumerable<T_Event> query, string columnName, string columnDirection)
+    public static IQueryable<T_Event> SortByColumn(this IQueryable<T_Event> query, string columnName, string columnDirection)
     {
-        var ascending = columnDirection == "asc";
+        var direction = columnDirection.ToUpper();
 
-        var fullName = "Call_." + columnName;
+        var fullProperty = "Call_." + columnName;
 
-        return (ascending ? query.OrderBy(event_ => GetPropertyValue(event_, fullName)) : query.OrderByDescending(event_ => GetPropertyValue(event_, fullName))).AsEnumerable();
+        var fullQueryText = fullProperty + " " + direction;
+        return query.OrderBy(fullQueryText);
     }
-    
-    public static IEnumerable<T_Event> FilterByEventType(this IEnumerable<T_Event> query, string[] eventTypefilter)
+
+    //Possible solution
+    //https://learn.microsoft.com/en-us/aspnet/core/data/ef-mvc/advanced?view=aspnetcore-6.0#dynamic-linq
+    //https://stackoverflow.com/questions/31955025/generate-ef-orderby-expression-by-string
+    public static IQueryable<T_Event> FilterByEventType(this IQueryable<T_Event> query, string[] eventTypefilter)
     {
 
         if (eventTypefilter.Any(EventType => EventType != ""))
@@ -30,7 +34,7 @@ internal static class EventServiceHelpers
 
     }
 
-    public static IEnumerable<T_Event> FilterBySearch(this IEnumerable<T_Event> query, string searchString)
+    public static IQueryable<T_Event> FilterBySearch(this IQueryable<T_Event> query, string searchString)
     {
         if (!string.IsNullOrEmpty(searchString))
         {
@@ -43,16 +47,18 @@ internal static class EventServiceHelpers
         }
     }
 
-    public static IEnumerable<T_Event> GetPage(this IEnumerable<T_Event> query, int sizeOfPage, int numberOfPagesToSkips)
+    public static IQueryable<T_Event> GetPage(this IQueryable<T_Event> query, int sizeOfPage, int numberOfPagesToSkips)
     {
         return query.Skip((numberOfPagesToSkips - 1) * sizeOfPage)
 
                     .Take(sizeOfPage)
 
-                    .AsEnumerable();
+                    ;
+
+
     }
 
-    public static IEnumerable<T_Event> Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(this IEnumerable<T_Event> query, string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip, int dataChunkSize)
+    public static IQueryable<T_Event> Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(this IQueryable<T_Event> query, string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip, int dataChunkSize)
     {
 
         return query.SortByColumn(sortColumn, sortDirection)
@@ -81,40 +87,5 @@ internal static class EventServiceHelpers
             return prop != null ? prop.GetValue(src, null) : null;
         }
     }
-    //Reflection attempts, causes an error
-
-    /*
-    public static IEnumerable<T_Event> SortByColumn(this IEnumerable<T_Event> query, string columnName, bool ascending)
-    {
-        PropertyInfo property = typeof(Call).GetProperty(columnName);
-        if (property == null)
-        {
-            throw new ArgumentException($"Column {columnName} not found on type {typeof(Call).Name}");
-        }
-
-        ParameterExpression parameter = Expression.Parameter(typeof(T_Event));
-        MemberExpression propertyAccess = Expression.MakeMemberAccess(Expression.Property(parameter, "Call_"), property);
-        LambdaExpression sortExpression = Expression.Lambda(propertyAccess, parameter);
-
-        MethodCallExpression orderByCall = Expression.Call(
-            typeof(Queryable),
-            ascending ? "OrderBy" : "OrderByDescending",
-            new[] { typeof(T_Event), property.PropertyType },
-            query.Expression,
-            Expression.Quote(sortExpression));
-
-        return query.Provider.CreateQuery<T_Event>(orderByCall);
-    }*/
-
-
-
-    //public static IEnumerable<T_Event> SortByColumn(this IEnumerable<T_Event> query, string columnName, string columnDirection)
-    //{
-    //    var ascending = columnDirection == "asc";
-    //    var property = typeof(Call).GetProperty(columnName);
-    //    return (ascending ? query.OrderBy(keySelector: Event => property.GetValue(Event.Call_)) : query.OrderByDescending(keySelector: Event => property.GetValue(Event.Call_))).AsEnumerable();
-    //}
-
-
 
 }

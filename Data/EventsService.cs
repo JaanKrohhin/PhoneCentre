@@ -1,9 +1,6 @@
 ﻿using CallCentreTask.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using PhoneCentre.Models;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace PhoneCentre.Data
 {
@@ -50,34 +47,34 @@ namespace PhoneCentre.Data
 
 
 
-        public IEnumerable<T_Event> GetCSVData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip)
+        public IQueryable<T_Event> WriteCSVDataToStream(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, Stream stream)
         {
 
-            //Percentage of all the stored Events in decimals to get
-            var chunkPercentage = 0.1;
+            var query = db.Events.Include(Events => Events.Event_Type)
+
+                             .Include(Events => Events.Call_)
+
+                             .FilterByEventType(eventTypefilter)
+
+                             .FilterBySearch(searchString)
+
+                             .SortByColumn(sortColumn, sortDirection);
+                             
+                             
+
+            using (var writer = new StreamWriter(stream, leaveOpen: true))
+            {
+                //Adding the headers
+                writer.WriteLine("Caller,Event,Receiver,Timestamp");
 
 
-            //The chunk size
-            int dataChunkSize = (int)(db.Events.Count() * chunkPercentage);
-
-
-
-            var query = GetData(searchString, eventTypefilter,  sortColumn, sortDirection, chunkSkip, dataChunkSize).AsEnumerable();
-
-            
-            
+                foreach (var item in query)
+                {
+                    writer.WriteLine(item.FormatToCvsString());
+                }
+            }
             return query;
-
-        }
-
-
-
-        
-        public IEnumerable<T_Event> SortByColumn(IEnumerable<T_Event> query, string columnName, string columnDirection)
-        {
-            //Determine in which order the columns will go
-
-            return query.SortByColumn(columnName, columnDirection);
+          
 
         }
 

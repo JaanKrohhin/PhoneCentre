@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using PhoneCentre.Data;
 using PhoneCentre.Models;
+using System.IO;
+using System.Net;
 
 namespace PhoneCentre.Controllers
 {
@@ -77,54 +79,27 @@ namespace PhoneCentre.Controllers
         /// 
 
         [HttpGet("download/{sortColumn}/{sortParams}")]
-        public FileStreamResult DownloadCSV(string sortColumn, string sortParams)
+        public HttpResponseMessage DownloadCSV(string sortColumn, string sortParams)
         {
             string searchString, sortDirection;
             string[] eventTypefilter;
             ConvertParamsToVariables(sortParams, out searchString, out sortDirection, out eventTypefilter);
 
-            // Creating a new memory stream
-            var stream = new MemoryStream();
+
+            var fileStream = new FileStream("file", FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
 
-            var dataChunkSize = 150;
-
-            var chunkSkip = 1;
-
-            IEnumerable<T_Event> data;
-            //Creating the csv writer
-            using (var writer = new StreamWriter(stream, leaveOpen: true))
-            {
-                //Adding the headers
-                writer.WriteLine("Caller,Event,Receiver,Timestamp");
+            var response = new HttpResponseMessage(HttpStatusCode.OK);
 
 
-                //Writing the data
-                do
-                {
-                    //Getting the data in chunks instead of the whole
-                    data = _eventsService.GetCSVData(sortColumn, searchString, sortDirection, eventTypefilter, chunkSkip).AsEnumerable();
+            response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            response.Content.Headers.ContentDisposition.FileName = $"all_records_{DateTime.Now.ToString("yyyyMMdd")}.csv";
+            response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/csv");
 
-                    chunkSkip++;
-
-                    foreach (T_Event eventItem in data)
-                    {
-                        writer.WriteLine(eventItem.FormatToCvsString());
-                    }
-
-                } while (data.Count() == dataChunkSize);
+            _eventsService.WriteCSVDataToStream(sortColumn, searchString, sortDirection, eventTypefilter, response.Content.ReadAsStream());
 
 
-
-            }
-
-            //Setting the position of the stream to the beginning
-            stream.Position = 0;
-
-            var file = File(stream, "text/csv", $"all_records_{DateTime.Now.ToString("yyyyMMdd")}.csv");
-
-            //Returning the file
-            return file;
+            return response;
 
 
         }
@@ -148,11 +123,7 @@ namespace PhoneCentre.Controllers
                 T_Event[][] historyOfCalls = new T_Event[IdsOfCalls.Count()][];
                 for (int i = 0; i < IdsOfCalls.Count(); i++)
                 {
-                    historyOfCalls[i] = db.Events.Where(Event => Event.Call_Id == IdsOfCalls[i])
-                        .Include(Event => Event.Call_)
-                        .Include(Event => Event.Event_Type)
-                        .OrderByDescending(Event => Event.Record_Date)
-                        .ToArray();
+                    historyOfCalls[i] = _eventsService.GetCall((int)IdsOfCalls[i]);
                 }
 
                 historyOfCalls = SortJaggedArrayByDatetime(historyOfCalls);
