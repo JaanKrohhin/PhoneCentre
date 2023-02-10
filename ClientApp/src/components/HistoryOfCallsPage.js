@@ -16,13 +16,16 @@ class HistoryOfCallsPage extends React.Component {
     }
 
 
-    dataSource = () => {
+    dataSource = (arg) => {
+        let data = []
         fetch("events/history/" + this.state.number)
             .then(response => response.json())
             .then(fetchedData => {
                 title = fetchedData[0][0].call_.caller + "#:All calls"
+                data = fetchedData
                 return fetchedData
             })
+        return data
     }
 
     render() {

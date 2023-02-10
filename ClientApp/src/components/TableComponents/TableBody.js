@@ -2,6 +2,10 @@ import { HistoryItem } from "./HistoryItem";
 import { TableItem } from "./TableItem";
 
 const TableBody = ({ Data, IsMain, IsHistory }) => {
+
+    console.log(Data);
+
+
     //IsHistory parameter is a boolean which has a value opposite to IsMain. There needs to be another variable that is able to determine
     if (Data === undefined || Data.length === 0) {
         return (
@@ -17,13 +21,13 @@ const TableBody = ({ Data, IsMain, IsHistory }) => {
 
     return (
         <tbody>
-            {Data.map((item) => {
+            {Data.map((item, index) => {
                 if (IsHistory) {
-                    return <HistoryItem item={item} />;
+                    return <HistoryItem key={index} item={item} />;
                 }
 
                 return (
-                    <TableItem item={{ item: item, type: IsMain ? "" : "detail" }} />
+                    <TableItem key={index} item={{ item: item, type: IsMain ? "" : "detail" }} />
                 );
             })}
         </tbody>

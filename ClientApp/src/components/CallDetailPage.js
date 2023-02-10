@@ -15,14 +15,16 @@ class CallDetailPage extends React.Component {
     }
 
     //fetching the data from the API on component mount
-    dataSource = () => {
+    dataSource = (arg) => {
+        let data = []
         fetch(`events/details/${this.state.id}`)
             .then(response => response.json())
             .then(fetchedData => {
                 title = `${fetchedData[0].call_.caller}#: ${fetchedData.length < 3 ? "Non-dialed call" : fetchedData.length < 5 ? "Cancelled call" : "Regular call"}`
+                data = fetchedData
                 return fetchedData
             });
-
+        return data
     }
 
     render() {
