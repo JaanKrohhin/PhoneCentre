@@ -9,23 +9,22 @@ const checkedStateOfEvents = ["","","","",""]
 class RecordsQueryPage extends React.Component {
 
 
-    dataSource = (arg) => {
-        let data = []
-        fetch(`events/${arg.selectedSize}/${arg.pageNumber}/${arg.sortColumnName}/${arg.sortDirection}+${arg.search}+${arg.checkedState.join("-")}`)
-            .then(response => response.json())
-            .then(fetchedData => {
-                data = fetchedData
-                return fetchedData
-            })
-        return data
+    dataSource = (stateOfTable) => {
+        let filter = stateOfTable.checkedState.join("-")
+        return `events/${stateOfTable.selectedSize}/${stateOfTable.pageNumber}/${stateOfTable.sortColumnName}/${stateOfTable.sortDirection}+${stateOfTable.search}+${filter}`
     }
-
+ 
+    exportSource = (stateOfTable) => {
+        let filter = stateOfTable.checkedState.join("-")
+        return `events/download/${stateOfTable.sortColumnName}/${stateOfTable.sortDirection}+${stateOfTable.search}+${filter}`
+    }
     //The Table
     render() {
         return (
             <Table
                 IsMainTable={true}
                 RowsDataSource={this.dataSource}
+                DefaultExportHandleSource={this.exportSource }
                 Title={title}
                 ColumnNames={columnNames}
                 RowSizes={rowSizes}

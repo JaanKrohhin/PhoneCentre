@@ -9,28 +9,31 @@ class CallDetailPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
+            title: "",
             id: window.location.pathname.split("/")[2],
         }
     }
 
     //fetching the data from the API on component mount
-    dataSource = (arg) => {
-        let data = []
-        fetch(`events/details/${this.state.id}`)
-            .then(response => response.json())
-            .then(fetchedData => {
-                title = `${fetchedData[0].call_.caller}#: ${fetchedData.length < 3 ? "Non-dialed call" : fetchedData.length < 5 ? "Cancelled call" : "Regular call"}`
-                data = fetchedData
-                return fetchedData
-            });
-        return data
+    dataSource = () => {
+        return `events/details/${this.state.id}`
+    }
+
+    dataConn = (rowData) => {
+        console.log(rowData[0])
+        this.setState(() => {
+            return {
+                id: this.state.id,
+                title: `${rowData[0].call_.caller}#: ${rowData.length < 3 ? "Non-dialed call" : rowData.length < 5 ? "Cancelled call" : "Regular call"}`
+
+            }
+        }) 
     }
 
     render() {
 
         return (
-            <Table RowsData={this.dataSource} Title={title} ColumnNames={columnNames} IsMainTable={false} IsHistory={false} />
+            <Table RowsDataSource={this.dataSource} Title={this.state.title} ColumnNames={columnNames} IsMainTable={false} IsHistory={false} RowSizes={[5, 10, 25]} DataConnection={ this.dataConn} />
         )
 
     }

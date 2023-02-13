@@ -67,11 +67,12 @@ namespace PhoneCentre.Data
                 //Adding the headers
                 writer.WriteLine("Caller,Event,Receiver,Timestamp");
 
-
+                writer.AutoFlush = true;
                 foreach (var item in query)
                 {
                     writer.WriteLine(item.FormatToCvsString());
                 }
+
             }
             return query;
           

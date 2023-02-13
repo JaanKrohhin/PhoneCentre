@@ -4,13 +4,11 @@ export const HistoryItem = (props) =>{
 
     //setiing the rwoItem from parameters
     const HistoryOfCallsArrayItem = props.item;
-    console.table(HistoryOfCallsArrayItem)
     function handleDate(){
         let pickUpIndex = 0
         HistoryOfCallsArrayItem.forEach((item, index) => {
             if(item.record_Event_Id.trim() === "EVENT_PICK_UP"){
                 pickUpIndex = index
-                console.log(formatDate(item.record_Date))
             }
         })
         return formatDate(HistoryOfCallsArrayItem[pickUpIndex].record_Date)

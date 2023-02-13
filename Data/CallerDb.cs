@@ -22,6 +22,8 @@ namespace CallCentreTask.Data
 
 
                 Random rng = new();
+
+
                 Call currentCall;
 
 
