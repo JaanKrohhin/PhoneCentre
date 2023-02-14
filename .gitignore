@@ -234,3 +234,4 @@ _Pvt_Extensions
 /ClientApp/.idea
 /LocalDatabase.db-shm
 /LocalDatabase.db-wal
+/LocalDatabase.db
