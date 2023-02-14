@@ -1,23 +1,26 @@
+
+import i18n from "../i18nConfig";
 //Array constant used for the multi-select filter
+
 export const events = [
     {
-        name: 'Pick-up',
+        name: i18n.t('events.Pick-up'),
         id: "EVENT_PICK_UP"
     },
     {
-        name: 'Dialling',
+        name: i18n.t('events.Dialling'),
         id: "EVENT_DIAL"
     },
     {
-        name: 'Call established',
+        name: i18n.t('events.Call Established'),
         id: "EVENT_CALL_ESTABLISHED"
     },
     {
-        name: 'Call end',
+        name: i18n.t('events.Call End'),
         id: "EVENT_CALL_END"
     },
     {
-        name: 'Hang-up',
+        name: i18n.t('events.Hang-up'),
         id: "EVENT_HANG_UP"
     }
 ];

@@ -1,0 +1,44 @@
+﻿{
+  "project": {
+    "title": "Phone Centre"
+  },
+  "events": {
+    "pickUp": "",
+    "dialling": "",
+    "callEstablished": "",
+    "callEnd": "",
+    "hangUp": ""
+  },
+  "table": {
+    "columnNames": {
+      "caller": "",
+      "event": "",
+      "receiver": "",
+      "timestamp": "",
+      "talkDuration": "",
+      "type": ""
+    },
+    "header": {
+      "export": "",
+      "searchText": ""
+    },
+    "footer": {
+      "rowPerPage": ""
+    }
+  },
+  "pages": {
+    "recordsQuery": {
+      "title": ""
+    },
+    "historyOfCalls": {
+      "title": ""
+    },
+    "callDetails": {
+      "title": {
+        "nonDialedCall": "",
+        "cancelledCall": "",
+        "regularCall": ""
+      }
+    }
+  }
+}

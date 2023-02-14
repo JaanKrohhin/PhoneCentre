@@ -95,7 +95,7 @@ namespace PhoneCentre.Controllers
             Response.Clear();
             Response.ContentType = "text/csv";
 
-            _eventsService.WriteCSVDataToStream(sortColumn, searchString, sortDirection, eventTypefilter, Response.Body);
+            _eventsService.WriteCSVDataToStream(sortColumn, searchString, sortDirection, eventTypefilter, Response.BodyWriter);
 
             Response.StartAsync();
 

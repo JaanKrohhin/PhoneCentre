@@ -1,12 +1,12 @@
-import Table from "./components/RecordsQueryPage";
 import CallDetailPage from "./components/CallDetailPage";
 import HistoryOfCallsPage from "./components/HistoryOfCallsPage";
+import RecordsQueryPage from "./components/RecordsQueryPage";
 
 //Define the routes of the application
 const AppRoutes = [
   {
     path: '/',
-    element: <Table />
+        element: <RecordsQueryPage useSuspense={true} />
   },
   {
     path: 'details/:id',

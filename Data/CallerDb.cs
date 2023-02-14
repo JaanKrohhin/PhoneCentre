@@ -32,7 +32,7 @@ namespace CallCentreTask.Data
                     new T_Event_Type { Event_Id = "EVENT_PICK_UP", Event_Type = "Pick-up", Description = "Generated when user pick ups the phone." },
                     new T_Event_Type { Event_Id = "EVENT_DIAL", Event_Type = "Dialling", Description = "Generated upon the start of the call" },
                     new T_Event_Type { Event_Id = "EVENT_CALL_ESTABLISHED", Event_Type = "Call Established", Description = "Generated when the reciever answers the call." },
-                    new T_Event_Type { Event_Id = "EVENT_CALL_END", Event_Type = "Call end", Description = "Generated when one of the party cancels the call, also generated when the reciever just cancels the call." },
+                    new T_Event_Type { Event_Id = "EVENT_CALL_END", Event_Type = "Call End", Description = "Generated when one of the party cancels the call, also generated when the reciever just cancels the call." },
                     new T_Event_Type { Event_Id = "EVENT_HANG_UP", Event_Type = "Hang-up", Description = "Generated when user hangs up the phone." },
                 };
 

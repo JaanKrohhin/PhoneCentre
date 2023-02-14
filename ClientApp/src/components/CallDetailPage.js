@@ -1,10 +1,12 @@
 import React from "react";
 import Table from "./TableComponents/Table";
-
-const columnNames = ["Caller", "Event", "Receiver", "Timestamp"];
-let title = `Call`;
+import { withTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 //Component responsible for call details page
 class CallDetailPage extends React.Component {
+
+
+    columnNames = [this.props.t('table.columnNames.caller'), this.props.t('table.columnNames.event'), this.props.t('table.columnNames.receiver'), this.props.t('table.columnNames.timestamp')]
     //Defining the state
     constructor(props) {
         super(props);
@@ -20,11 +22,10 @@ class CallDetailPage extends React.Component {
     }
 
     dataConn = (rowData) => {
-        console.log(rowData[0])
         this.setState(() => {
             return {
                 id: this.state.id,
-                title: `${rowData[0].call_.caller}#: ${rowData.length < 3 ? "Non-dialed call" : rowData.length < 5 ? "Cancelled call" : "Regular call"}`
+                //title: `${rowData[0].call_.caller}#: ${rowData.length < 3 ? this.prop.t("callTypes.nonDialedCall") : rowData.length < 5 ? this.prop.t("callTypes.cancelledCall") : this.prop.t("callTypes.regularCall")}`
 
             }
         }) 
@@ -33,9 +34,9 @@ class CallDetailPage extends React.Component {
     render() {
 
         return (
-            <Table RowsDataSource={this.dataSource} Title={this.state.title} ColumnNames={columnNames} IsMainTable={false} IsHistory={false} RowSizes={[5, 10, 25]} DataConnection={ this.dataConn} />
+            <Table RowsDataSource={this.dataSource} Title={this.state.title} ColumnNames={this.columnNames} IsMainTable={false} IsHistory={false} RowSizes={[5, 10, 25]} DataConnection={ this.dataConn} />
         )
 
     }
 }
-export default CallDetailPage;
+export default withTranslation()(CallDetailPage);

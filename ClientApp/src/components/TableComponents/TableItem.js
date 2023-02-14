@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
-export const TableItem = (parameters) =>{
+export const TableItem = (parameters) => {
+    const { t } = useTranslation()
     const rowItem = parameters.item.item;
     const rowType = parameters.item.type;
     //Handles the redirection to the detail page and all calls page
@@ -20,7 +22,7 @@ export const TableItem = (parameters) =>{
         return (
             <tr>
                 <td>{rowItem.call_.caller ? rowItem.call_.caller : "---" }</td>
-                <td>{rowItem.event_Type.event_Type}</td>
+                <td>{t("events." + rowItem.event_Type.event_Type)}</td>
                 <td>{rowItem.call_.receiver ? rowItem.call_.receiver : "---"}</td>
                 <td>{formatDate(rowItem.record_Date)}</td>
             </tr>
@@ -30,7 +32,7 @@ export const TableItem = (parameters) =>{
         return (
             <tr onClick={(e) => routeChange(e)}>
                 <td data-caller="true">{rowItem.call_.caller ? rowItem.call_.caller : "---"}</td>
-                <td data-caller="false">{rowItem.event_Type.event_Type}</td>
+                <td data-caller="false">{t("events." + rowItem.event_Type.event_Type)}</td>
                 <td data-caller="false">{rowItem.call_.receiver ? rowItem.call_.receiver : "---"}</td>
                 <td data-caller="false">{formatDate(rowItem.record_Date)}</td>
             </tr>

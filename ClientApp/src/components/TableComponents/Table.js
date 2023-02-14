@@ -1,7 +1,7 @@
 
 import TableHead from "./TableHead";
 import TableBody from "./TableBody";
-import { SearchBar } from "./TableExtras/Search";
+import Search from "./TableExtras/Search";
 import { TableFooter } from "./TableExtras/TableFooter";
 import React, { useEffect } from "react";
 import { ExportButton } from "./TableExtras/ExportButton";
@@ -196,7 +196,7 @@ export default function Table({ Title, RowsDataSource, DefaultExportHandleSource
     return (
         <div className="table-wrapper">
             {isMain ? <h1>{title}</h1> : <h2>{title}</h2>}
-            {isMain ? <SearchBar OnChange={searchFor} /> : null}
+            {isMain ? <Search OnChange={searchFor} /> : null}
             {isMain ? <ExportButton onClick={exportDataHandle} /> : null}
             <table className="fl-table main-table">
                 <TableHead HeaderClickHandle={headerClickHandle} ColumnHeaders={columnNames} />

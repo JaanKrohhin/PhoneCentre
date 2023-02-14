@@ -1,0 +1,46 @@
+﻿{
+	"project": {
+		"title": "Phone Centre"
+	},
+	"events": {
+		"Pick-up": "Pick-up",
+		"Dialling": "Dialling",
+		"Call Established": "Call Established",
+		"Call End": "Call End",
+		"Hang-up": "Hang-up"
+	},
+	"table": {
+		"columnNames": {
+			"caller": "Caller",
+			"event": "Event",
+			"receiver": "Receiver",
+			"timestamp": "Timestamp",
+			"talkDuration": "Talk Duration",
+			"type": "Type"
+		},
+		"header": {
+			"export": "Export",
+			"searchText": "Caller or Receiver number"
+		},
+		"footer": {
+			"rowsPerPage": "Rows per page"
+		}
+	},
+	"pages": {
+		"recordsQuery": {
+			"title": "Records Query"
+		},
+		"historyOfCalls": {
+			"title": "All calls"
+		},
+		"callDetails": {
+			"title": "Call"
+		}
+	},
+	"callTypes":{
+		"nonDialedCall": "Non-dialed call",
+		"cancelledCall": "Cancelled call",
+		"regularCall": "Regular call"
+	}
+
+}
