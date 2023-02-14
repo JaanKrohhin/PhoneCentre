@@ -88,41 +88,30 @@ namespace PhoneCentre.Controllers
             ConvertParamsToVariables(sortParams, out searchString, out sortDirection, out eventTypefilter);
 
 
+            var filename = $"all_records_{DateTime.Now.ToString("yyyyMMdd")}.csv";
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), filename);
 
-            FileStream fileStream;
-            var fileExtension = ".csv";
-            var filename = $"all_records_{DateTime.Now.ToString("yyyyMMdd")}" + fileExtension;
-            var i = 1;
-            while (true)
+            using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite))
             {
-                try
-                {
-                    fileStream = new FileStream(filename, FileMode.Create, FileAccess.ReadWrite);
-                    break;
-                }
-                catch (Exception)
-                {
-                    fileExtension = $"({i.ToString()}).csv";
-                    filename = $"all_records_{DateTime.Now.ToString("yyyyMMdd")}" + fileExtension;
-                    i++;
-                }
+                _eventsService.WriteCSVDataToStream(sortColumn, searchString, sortDirection, eventTypefilter, fileStream);
+
+
+
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+
+                response.Content = new StreamContent(fileStream);
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = filename;
+
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
+
+
+                return response;
             }
-
-            _eventsService.WriteCSVDataToStream(sortColumn, searchString, sortDirection, eventTypefilter, fileStream);
-
-            var response = new HttpResponseMessage(HttpStatusCode.OK);
-
-            response.Content = new StreamContent(fileStream);
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            response.Content.Headers.ContentDisposition.FileName = filename;
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
-            response.Content.Headers.ContentLength = fileStream.Length;
-            return response;
-
-
         }
 
-
+        /*
+         */
 
 
 

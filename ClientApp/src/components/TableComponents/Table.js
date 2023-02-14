@@ -71,18 +71,26 @@ export default function Table({ Title, RowsDataSource, DefaultExportHandleSource
 
     
     //On click, fetches the sorted and filtered data as an .csv file
-    const exportDataHandle = ExportHandle === undefined ? () => {
+    const exportDataHandle = ExportHandle === undefined ? async () => {
         const link = document.createElement("a")
-        fetch(DefaultExportHandleSource(state)).then(response => response.blob())
-            .then( responseBlob => {
+        await fetch(DefaultExportHandleSource(state), {
+            method: "GET",
+            responseType: "blob"
+
+        }).then(response => response.blob())
+
+            .then(responseBlob => {
+                const date = new Date().toISOString().substring(0, 10).replaceAll('-', '');
+                alert(date)
+                const filename = `all_records_${date}.csv`;
                 link.href = URL.createObjectURL(responseBlob)
-                console.log(link)
-                link.target = "_blank"
-                link.download = "a.csv"
-                link.click()
+                link.download = filename
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
                 }
             )
-        window.open(DefaultExportHandleSource(state), "_blank");
 
     } : ExportHandle(state)
 

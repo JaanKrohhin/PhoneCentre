@@ -47,7 +47,7 @@ namespace PhoneCentre.Data
 
 
 
-        public IQueryable<T_Event> WriteCSVDataToStream(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, Stream stream)
+        public void WriteCSVDataToStream(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, Stream stream)
         {
 
             var query = db.Events.Include(Events => Events.Event_Type)
@@ -66,15 +66,13 @@ namespace PhoneCentre.Data
             {
                 //Adding the headers
                 writer.WriteLine("Caller,Event,Receiver,Timestamp");
-
-                writer.AutoFlush = true;
                 foreach (var item in query)
                 {
                     writer.WriteLine(item.FormatToCvsString());
+                    writer.Flush();
                 }
 
             }
-            return query;
           
 
         }
