@@ -1,6 +1,7 @@
 ﻿using CallCentreTask.Data;
 using Microsoft.EntityFrameworkCore;
 using PhoneCentre.Models;
+using System.Text;
 
 namespace PhoneCentre.Data
 {
@@ -47,7 +48,7 @@ namespace PhoneCentre.Data
 
 
 
-        public void WriteCSVDataToStream(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, Stream stream)
+        public async void WriteCSVDataToStream(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, Stream stream)
         {
 
             var query = db.Events.Include(Events => Events.Event_Type)
@@ -59,21 +60,19 @@ namespace PhoneCentre.Data
                              .FilterBySearch(searchString)
 
                              .SortByColumn(sortColumn, sortDirection);
-                             
-                             
 
-            using (var writer = new StreamWriter(stream, leaveOpen: true))
+
+            //stream.W
+            var writer = new StreamWriter(stream, /*encoding:Encoding.UTF8,*/ leaveOpen: true);
+            
+            writer.WriteAsync("Caller,Event,Receiver,Timestamp\n");
+            foreach (var item in query)
             {
-                //Adding the headers
-                writer.WriteLine("Caller,Event,Receiver,Timestamp");
-                foreach (var item in query)
-                {
-                    writer.WriteLine(item.FormatToCvsString());
-                    writer.Flush();
-                }
-
+                writer.WriteAsync(item.FormatToCvsString()+ "\n");
             }
-          
+            writer.DisposeAsync();
+            
+         
 
         }
 

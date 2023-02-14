@@ -81,7 +81,6 @@ export default function Table({ Title, RowsDataSource, DefaultExportHandleSource
 
             .then(responseBlob => {
                 const date = new Date().toISOString().substring(0, 10).replaceAll('-', '');
-                alert(date)
                 const filename = `all_records_${date}.csv`;
                 link.href = URL.createObjectURL(responseBlob)
                 link.download = filename
@@ -91,7 +90,6 @@ export default function Table({ Title, RowsDataSource, DefaultExportHandleSource
                 
                 }
             )
-
     } : ExportHandle(state)
 
 

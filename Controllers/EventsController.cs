@@ -8,6 +8,7 @@ using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Net.Http.Headers;
+using System.Web;
 
 namespace PhoneCentre.Controllers
 {
@@ -81,33 +82,23 @@ namespace PhoneCentre.Controllers
         /// 
 
         [HttpGet("download/{sortColumn}/{sortParams}")]
-        public HttpResponseMessage DownloadCSV(string sortColumn, string sortParams)
+        public void DownloadCSV(string sortColumn, string sortParams)
         {
             string searchString, sortDirection;
             string[] eventTypefilter;
             ConvertParamsToVariables(sortParams, out searchString, out sortDirection, out eventTypefilter);
 
 
-            var filename = $"all_records_{DateTime.Now.ToString("yyyyMMdd")}.csv";
+            var filename = $"all_records.csv";
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), filename);
 
-            using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite))
-            {
-                _eventsService.WriteCSVDataToStream(sortColumn, searchString, sortDirection, eventTypefilter, fileStream);
+            Response.Clear();
+            Response.ContentType = "text/csv";
 
+            _eventsService.WriteCSVDataToStream(sortColumn, searchString, sortDirection, eventTypefilter, Response.Body);
 
+            Response.StartAsync();
 
-                var response = new HttpResponseMessage(HttpStatusCode.OK);
-
-                response.Content = new StreamContent(fileStream);
-                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                response.Content.Headers.ContentDisposition.FileName = filename;
-
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
-
-
-                return response;
-            }
         }
 
         /*
