@@ -1,9 +1,9 @@
 import {formatDate} from "./TableItem"
+import { withTranslation } from 'react-i18next';
 
-export const HistoryItem = (props) =>{
-
+function HistoryItem({ item, t, i18n }) {
     //setiing the rwoItem from parameters
-    const HistoryOfCallsArrayItem = props.item;
+    const HistoryOfCallsArrayItem = item;
     function handleDate(){
         let pickUpIndex = 0
         HistoryOfCallsArrayItem.forEach((item, index) => {
@@ -54,11 +54,11 @@ export const HistoryItem = (props) =>{
     //Sets the type for the call
     function handleType() {
         if (HistoryOfCallsArrayItem.length < 3){
-            return "Non-dialled call"
+            return t("callTypes.nonDialedCall")
         }else if (HistoryOfCallsArrayItem.length < 5){
-            return "Cancelled call"
+            return t("callTypes.cancelledCall")
         }else{
-            return "Regular call"
+            return t("callTypes.regularCall")
         }
     }
 
@@ -75,3 +75,4 @@ export const HistoryItem = (props) =>{
     )
 
 }
+export default withTranslation()(HistoryItem)

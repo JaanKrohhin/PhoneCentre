@@ -1,6 +1,6 @@
 import React from 'react';
-
-const TableHead = ({ ColumnHeaders, HeaderClickHandle }) => {
+import { withTranslation } from 'react-i18next';
+function TableHead({ ColumnHeaders, HeaderClickHandle, t }) {
     return(
         <thead>
         <tr className={"row-header-click"}>
@@ -9,7 +9,7 @@ const TableHead = ({ ColumnHeaders, HeaderClickHandle }) => {
                     return (
 
                         <th key={index}
-                            onClick={index === 0 || index === 2 ? () => HeaderClickHandle({column: header}) : undefined}>{header}</th>
+                            onClick={index === 0 || index === 2 ? () => HeaderClickHandle({column: header}) : undefined}>{t(header)}</th>
                     );
                 })
             }
@@ -19,8 +19,7 @@ const TableHead = ({ ColumnHeaders, HeaderClickHandle }) => {
 }
 
 TableHead.defaultProps = {
-    ColumnHeaders: ["Caller", "Event", "Receiver", "Timestamp"],
     HeaderClickHandle: () => {}
 }
 
-export default TableHead;
+export default withTranslation()(TableHead);

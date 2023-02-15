@@ -1,7 +1,7 @@
 import {PageButtons} from "./PageButtons";
 import React from "react";
 import {RowSelection} from "./RowSelect"
-import {EventFilter} from "./EventFilterSelect";
+import EventFilter from "./EventFilterSelect";
 export const TableFooter = ({Handlers, RowSizes, SelectedRowSize, CheckedStateOfEvents}) => {
     const {updateSelectedSize, previousPageHandle, nextPageHandle, eventFilterHandle} = Handlers;
 

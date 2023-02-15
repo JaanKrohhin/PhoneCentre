@@ -1,4 +1,3 @@
-
 import TableHead from "./TableHead";
 import TableBody from "./TableBody";
 import Search from "./TableExtras/Search";
@@ -6,11 +5,12 @@ import { TableFooter } from "./TableExtras/TableFooter";
 import React, { useEffect } from "react";
 import { ExportButton } from "./TableExtras/ExportButton";
 import { useState } from "react";
-
+import TableTitle from './TableTitle'
+import { withTranslation } from 'react-i18next';
 //The page to fall back on
 const pageReset = 1;
 
-export default function Table({ Title, RowsDataSource, DefaultExportHandleSource, HeaderClick, SearchHandler, FooterHandlers, IsMainTable, RowSizes, SelectedRowSize, CheckedStateOfEvents, ExportHandle, ColumnNames, IsHistory, DataConnection }) {
+function Table({ Title, RowsDataSource, DefaultExportHandleSource, HeaderClick, SearchHandler, FooterHandlers, IsMainTable, RowSizes, SelectedRowSize, CheckedStateOfEvents, ExportHandle, ColumnNames, IsHistory, DataConnection }) {
 
 
     const [state, setState] = useState({
@@ -152,9 +152,7 @@ export default function Table({ Title, RowsDataSource, DefaultExportHandleSource
 
                 .then(nextPageData => {
 
-                    console.table(nextPageData)
                     if (nextPageData.length > 0) {
-                        console.log("Passed")
                         setState(() => {                        
                             return temp
                         })
@@ -191,11 +189,10 @@ export default function Table({ Title, RowsDataSource, DefaultExportHandleSource
 
     } : FooterHandlers(state)
 
-
-
     return (
+
         <div className="table-wrapper">
-            {isMain ? <h1>{title}</h1> : <h2>{title}</h2>}
+            <TableTitle Title={title} IsMain={ isMain} />
             {isMain ? <Search OnChange={searchFor} /> : null}
             {isMain ? <ExportButton onClick={exportDataHandle} /> : null}
             <table className="fl-table main-table">
@@ -208,3 +205,4 @@ export default function Table({ Title, RowsDataSource, DefaultExportHandleSource
         </div>
     )
 }
+export default withTranslation()(Table)

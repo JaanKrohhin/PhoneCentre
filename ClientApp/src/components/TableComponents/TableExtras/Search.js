@@ -1,6 +1,6 @@
 import { withTranslation } from 'react-i18next';
 
-function SearchBar({ t, i18n, OnChange  }){
+function SearchBar({ t, OnChange  }){
 
     return (
         <div id={"searchBar"}>

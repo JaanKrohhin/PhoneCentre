@@ -1,5 +1,5 @@
-import { HistoryItem } from "./HistoryItem";
-import { TableItem } from "./TableItem";
+import HistoryItem from "./HistoryItem";
+import TableItem from "./TableItem";
 
 const TableBody = ({ Data, IsMain, IsHistory }) => {
 

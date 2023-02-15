@@ -1,44 +1,46 @@
 ﻿{
 	"project": {
-		"title": "Phone Centre"
+		"title": "Telefonikeskus"
 	},
 	"events": {
-		"pickUp": "Pick-up",
-		"dialling": "Dialling",
-		"callEstablished": "Call established",
-		"callEnd": "Call end",
-		"hangUp": "Hang-up"
+		"Pick-up": "Ülesvõtt",
+		"Dialling": "Valimine",
+		"Call Established": "Kõne loodud",
+		"Call End": "Kõne lõpp",
+		"Hang-up": "Katkestamine"
 	},
 	"table": {
 		"columnNames": {
-			"caller": "Caller",
-			"event": "Event",
-			"receiver": "Receiver",
-			"timestamp": "Timestamp",
-			"talkDuration": "Talk Duration",
-			"type": "Type"
+			"caller": "Helistaja",
+			"event": "Sündmus",
+			"receiver": "Vastuvõtja",
+			"timestamp": "Aeg",
+			"talkDuration": "Rääkimis aeg",
+			"type": "Tüüp"
 		},
 		"header": {
-			"export": "Export",
-			"searchText": "Caller or Receiver number"
+			"export": "Eksport",
+			"searchText": "Helistaja või Vastuvõtja number"
 		},
 		"footer": {
-			"rowPerPage": "Rows per page"
+			"rowsPerPage": "Ridasid lehel"
 		}
 	},
 	"pages": {
 		"recordsQuery": {
-			"title": "Records Query"
+			"title": "Kirjepäring"
 		},
 		"historyOfCalls": {
-			"title": "All calls"
+			"title": "Kõik kõned"
 		},
 		"callDetails": {
-			"title": {
-				"nonDialedCall": "Non-dialed call",
-				"cancelledCall": "Cancelled call",
-				"regularCall": "Regular call"
-			}
+			"title": "Kõne"
 		}
+	},
+	"callTypes": {
+		"nonDialedCall": "Valimata kõne",
+		"cancelledCall": "Tühistatud kõne",
+		"regularCall": "Tavakõne"
 	}
+
 }

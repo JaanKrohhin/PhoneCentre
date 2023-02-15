@@ -1,13 +1,8 @@
 import React from "react";
 import Table from "./TableComponents/Table";
 import { withTranslation } from 'react-i18next';
-import { useTranslation } from "react-i18next";
 //Component responsible for call details page
 class CallDetailPage extends React.Component {
-
-
-    columnNames = [this.props.t('table.columnNames.caller'), this.props.t('table.columnNames.event'), this.props.t('table.columnNames.receiver'), this.props.t('table.columnNames.timestamp')]
-    //Defining the state
     constructor(props) {
         super(props);
         this.state = {
@@ -15,6 +10,10 @@ class CallDetailPage extends React.Component {
             id: window.location.pathname.split("/")[2],
         }
     }
+    columnNames = ['table.columnNames.caller', 'table.columnNames.event', 'table.columnNames.receiver', 'table.columnNames.timestamp']
+    nonDialedCall = "callTypes.nonDialedCall"
+    cancelledCall = "callTypes.cancelledCall"
+    regularCall = "callTypes.regularCall"
 
     //fetching the data from the API on component mount
     dataSource = () => {
@@ -25,14 +24,13 @@ class CallDetailPage extends React.Component {
         this.setState(() => {
             return {
                 id: this.state.id,
-                //title: `${rowData[0].call_.caller}#: ${rowData.length < 3 ? this.prop.t("callTypes.nonDialedCall") : rowData.length < 5 ? this.prop.t("callTypes.cancelledCall") : this.prop.t("callTypes.regularCall")}`
+                title: `${rowData[0].call_.caller}#${rowData.length < 3 ? this.nonDialedCall : rowData.length < 5 ? this.cancelledCall : this.regularCall}`
 
             }
         }) 
     }
 
     render() {
-
         return (
             <Table RowsDataSource={this.dataSource} Title={this.state.title} ColumnNames={this.columnNames} IsMainTable={false} IsHistory={false} RowSizes={[5, 10, 25]} DataConnection={ this.dataConn} />
         )

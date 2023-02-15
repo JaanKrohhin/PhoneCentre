@@ -1,10 +1,9 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { withTranslation } from 'react-i18next';
 
-export const TableItem = (parameters) => {
-    const { t } = useTranslation()
-    const rowItem = parameters.item.item;
-    const rowType = parameters.item.type;
+function TableItem({ item, t, i18n }) {
+    const rowItem = item.item;
+    const rowType = item.type;
     //Handles the redirection to the detail page and all calls page
     const routeChange = (e) =>{
         if (e.target.dataset.caller === "true"){
@@ -64,3 +63,4 @@ export function formatDate(dateInput){
 
     return [day, month, year].join('-') + ' ' + [hours, minutes, seconds].join(':');
 }
+export default withTranslation()(TableItem)
