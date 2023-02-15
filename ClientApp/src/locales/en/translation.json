@@ -18,6 +18,7 @@
 			"talkDuration": "Talk Duration",
 			"type": "Type"
 		},
+		"loading": "Loading...",
 		"header": {
 			"export": "Export",
 			"searchText": "Caller or Receiver number"

@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "phonecentre",
+      "composeLaunchUrl": "https://localhost:44450",
+      "serviceActions": {
+        "clientapp": "StartWithoutDebugging",
+        "phonecentre": "StartDebugging"
+      }
+    }
+  }
+}

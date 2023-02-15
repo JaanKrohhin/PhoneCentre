@@ -1,7 +1,7 @@
 import HistoryItem from "./HistoryItem";
 import TableItem from "./TableItem";
-
-const TableBody = ({ Data, IsMain, IsHistory }) => {
+import { withTranslation } from 'react-i18next';
+function TableBody({ Data, IsMain, IsHistory, t }){
 
 
     //IsHistory parameter is a boolean which has a value opposite to IsMain. There needs to be another variable that is able to determine
@@ -10,7 +10,7 @@ const TableBody = ({ Data, IsMain, IsHistory }) => {
             <tbody>
                 <tr>
                     <td className={"loadingDiv"} colSpan="4">
-                        Loading...
+                        { t("table.loading")}
                     </td>
                 </tr>
             </tbody>
@@ -32,4 +32,4 @@ const TableBody = ({ Data, IsMain, IsHistory }) => {
     );
 };
 
-export default TableBody;
+export default withTranslation()(TableBody);

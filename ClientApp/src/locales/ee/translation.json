@@ -18,6 +18,7 @@
 			"talkDuration": "Rääkimis aeg",
 			"type": "Tüüp"
 		},
+		"loading": "Laadimine...",
 		"header": {
 			"export": "Eksport",
 			"searchText": "Helistaja või Vastuvõtja number"
