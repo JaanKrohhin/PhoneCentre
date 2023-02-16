@@ -46,7 +46,6 @@ function Table({ Title, RowsDataSource, DefaultExportHandleSource, HeaderClick, 
             return temp
         })
     }
-
     useEffect(() => {
         fetchDataFromApi(state)
     }, [])

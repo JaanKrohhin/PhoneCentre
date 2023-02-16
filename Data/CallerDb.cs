@@ -21,7 +21,6 @@ namespace CallCentreTask.Data
                 Database.EnsureDeleted();
                 Database.EnsureCreated();
 
-
                 Random rng = new();
 
 
@@ -113,7 +112,6 @@ namespace CallCentreTask.Data
                 Console.WriteLine("Database generated");
                 SaveChanges();
 
-                Console.WriteLine(Events.Count());
             }
 
             void GenerateRegularCalls(Random rng, Call currentCall, T_Event_Type[] EventTypes, ref DateTime datetime)
@@ -171,6 +169,7 @@ namespace CallCentreTask.Data
                             Record_Date = datetime,
                             Call_ = currentCall
                         };
+                        Console.WriteLine(currenEvent.FormatToCvsString());
                         Events.Add(currenEvent);
 
 
@@ -235,19 +234,13 @@ namespace CallCentreTask.Data
             return start;
         }
 
-        /*docker run -it ^
-    -e "ACCEPT_EULA=Y" ^
-    -e "SA_PASSWORD=Qwe123!" ^
-    -p 1433:1433 ^
-    --name sql-server-2022 ^
-    mcr.microsoft.com/mssql/server:2022-latest*/
-
+        
         //Server=localhost;Database=CallerDb;User Id=SA;Password=Qwe123!;                    MultipleActiveResultSets=true
 
         //Creates a connection to the database using the connection string in Resources.resx
         protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder)
         {
-            dbContextOptionsBuilder.UseSqlite(PhoneCentre.Properties.Resources.connectionString);
+            dbContextOptionsBuilder.UseSqlServer(PhoneCentre.Properties.Resources.connectionString);
         }
     }
 }

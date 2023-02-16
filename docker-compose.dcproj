@@ -5,7 +5,7 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>d9e8ca8b-4c58-46e2-8b95-6839268afc6e</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
+    <DockerServiceUrl>https://localhost:44451/events/5/1/Caller/asc++----</DockerServiceUrl>
     <DockerServiceName>phonecentre</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>

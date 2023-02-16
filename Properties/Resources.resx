@@ -118,6 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="connectionString" xml:space="preserve">
-    <value>Data Source=LocalDatabase.db</value>
+    <value>Data Source=192.168.3.68,1433;Initial Catalog=caller;User ID=sa;Password=Qwe123!!;TrustServerCertificate=True</value>
   </data>
 </root>
