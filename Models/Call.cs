@@ -1,20 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace PhoneCentre.Models
 {
-    [Table("T_CALL")]
     public class Call
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("RECORD_ID")]
+        [BsonElement("RECORD_ID")]
         public int Record_Id { get; set; }
-        
 
-        [Column("CALLER")]
+        [BsonElement("CALLER")]
         public int Caller { get; set; }
         
         
-        [Column("RECEIVER")]
+        [BsonElement("RECEIVER")]
         public int Receiver { get; set; }
     }
 }

@@ -14,11 +14,11 @@ services:
       - "44450:44450"
     stdin_open: true
     tty: true
-  sql-server-2022:
-    container_name: SQL
-    image: mcr.microsoft.com/mssql/server:2022-latest
+  mongodb:
+    container_name: Mongo
+    image: mongo
     ports:
-      - "1433:1433"
+      - "27017:27017" 
     environment:
-      SA_PASSWORD: "Qwe123!!"
-      ACCEPT_EULA: "Y"
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: Qwe123!!

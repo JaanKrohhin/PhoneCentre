@@ -1,15 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace PhoneCentre.Models
 {
-    [Table("T_EVENT_TYPE")]
     public class T_Event_Type
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None), Column("EVENT_ID")]
+        [BsonElement("EVENT_ID")]
         public string Event_Id { get; set; }
-        [Column("EVENT_NAME")]
+
+        [BsonElement("EVENT_NAME")]
         public string Event_Type { get; set; }
+
+        [BsonElement("DESCRIPTION")]
         public string Description { get; set; }
     }
 }

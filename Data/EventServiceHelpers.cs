@@ -38,7 +38,7 @@ public static class EventServiceHelpers
     {
         if (!string.IsNullOrEmpty(searchString))
         {
-            return query.Where(e => e.Call_.Caller.ToString().StartsWith(searchString) || e.Call_.Receiver.ToString()
+            return query.Where(Event => Event.Call_.Caller.ToString().StartsWith(searchString) || Event.Call_.Receiver.ToString()
                                                                                                       .StartsWith(searchString));
         }
         else

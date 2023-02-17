@@ -1,5 +1,6 @@
 ﻿using CallCentreTask.Data;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using PhoneCentre.Models;
 using System.IO.Pipelines;
 using System.Text;
@@ -32,10 +33,7 @@ namespace PhoneCentre.Data
          */
         public IEnumerable<T_Event> GetData(string searchString, string[] eventTypefilter, string sortColumn, string sortDirection, int numberOfSkips, int size)
         {
-
-                return db.Events.Include(Event => Event.Call_)
-
-                    .Include(Event => Event.Event_Type)
+                return db.GetEventTable().AsQueryable()
 
                     .FilterByEventType(eventTypefilter)
 
@@ -52,9 +50,7 @@ namespace PhoneCentre.Data
         public async void WriteCSVDataToStream(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, PipeWriter writer)
         {
 
-            var query = db.Events.Include(Events => Events.Event_Type)
-
-                             .Include(Events => Events.Call_)
+            var query = db.GetEventTable().AsQueryable()
 
                              .FilterByEventType(eventTypefilter)
 
@@ -74,16 +70,15 @@ namespace PhoneCentre.Data
 
         public T_Event[] GetCall(int callId)
         {
-            return db.Events.Where(Event => Event.Call_Id == callId)
-                .Include(Event => Event.Call_)
-                .Include(Event => Event.Event_Type)
+            return db.GetEventTable().AsQueryable()
+                .Where(Event => Event.Call_Id == callId)
                 .ToArray();
         }
 
         public int?[] GetCallHistory( int caller)
         {
-            return db.Events.Where(Event => Event.Call_.Caller == caller)
-                                .Include(Event => Event.Call_)
+            return db.GetEventTable().AsQueryable()
+                .Where(Event => Event.Call_.Caller == caller)
                                 .Select(Event => Event.Call_Id)
                                 .Distinct()
                                 .ToArray();

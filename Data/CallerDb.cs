@@ -1,15 +1,60 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using PhoneCentre.Models;
 using System.Linq.Dynamic.Core;
+using System.Runtime.CompilerServices;
 
 namespace CallCentreTask.Data
 {
-    public class CallerDb : DbContext
+    public class CallerDb
     {
-        public virtual DbSet<Call> Calls { get; set; }
-        public virtual DbSet<T_Event> Events { get; set; }
-        public virtual DbSet<T_Event_Type> Events_Type { get; set; }
+        private string conn = "mongodb://root:Qwe123!!@192.168.3.68:27017";
+        private string DatabaseName = "CallerDB";
+        public string Events = nameof(T_Event).ToUpper();
+        public string TypesOfEvents = nameof(T_Event_Type).ToUpper();
+        public string Calls = nameof(Call).ToUpper();
 
+        //Made a T generic function first but it only generated 1 table named "T"
+        public IMongoCollection<T_Event> GetEventTable()
+        {
+            var client = new MongoClient(conn);
+            var db = client.GetDatabase(DatabaseName);
+            return db.GetCollection<T_Event>(Events);
+        }
+        public IMongoCollection<T_Event_Type> GetTypeTable()
+        {
+            var client = new MongoClient(conn);
+            var db = client.GetDatabase(DatabaseName);
+            return db.GetCollection<T_Event_Type>(TypesOfEvents);
+        }
+        public IMongoCollection<Call> GetCallTable()
+        {
+            var client = new MongoClient(conn);
+            var db = client.GetDatabase(DatabaseName);
+            return db.GetCollection<Call>(Calls);
+        }
+
+        public void InsertOneToMongoTable(Call ModelItem)
+        {
+            GetCallTable().InsertOne(ModelItem);
+        }
+        public void InsertOneToMongoTable(T_Event ModelItem)
+        {
+            GetEventTable().InsertOne(ModelItem);
+        }
+        public void InsertManyToMongoTable(T_Event_Type[] ModelItem)
+        {
+            GetTypeTable().InsertMany(ModelItem);
+        }
+        private void ClearAllCollections()
+        {
+            var client = new MongoClient(conn);
+            var db = client.GetDatabase(DatabaseName);
+            db.DropCollection("T");
+            db.DropCollection(Events);
+            db.DropCollection(Calls);
+            db.DropCollection(TypesOfEvents);
+        }
         public static bool DbIsGenerated = false;
 
         public CallerDb()
@@ -18,8 +63,7 @@ namespace CallCentreTask.Data
             if (!DbIsGenerated)
             {
                 DbIsGenerated = true;
-                Database.EnsureDeleted();
-                Database.EnsureCreated();
+                ClearAllCollections();
 
                 Random rng = new();
 
@@ -36,21 +80,20 @@ namespace CallCentreTask.Data
                     new T_Event_Type { Event_Id = "EVENT_HANG_UP", Event_Type = "Hang-up", Description = "Generated when user hangs up the phone." },
                 };
 
-                Events_Type.AddRange(EventTypes);
+                InsertManyToMongoTable(EventTypes);
 
-                SaveChanges();
+               
 
 
 
                 //Initiating counter variables for calls
-                int callsTotal = 0;
+                int callsTotal = 1;
                 int regularCounter = 0;
                 int nonDialedCounter = 0;
                 int cancelledCounter = 0;
 
 
-
-                while (callsTotal < 100)
+                while (callsTotal < 101)
                 {
                     //Randomly chooses how many calls this caller will have, 1-3
                     int numCalls = rng.Next(1, 4);
@@ -80,7 +123,6 @@ namespace CallCentreTask.Data
                                     GenerateRegularCalls(rng, currentCall, EventTypes, ref datetime);
                                     regularCounter++;
                                     callsTotal++;
-
                                 }
                                 break;
 
@@ -110,19 +152,18 @@ namespace CallCentreTask.Data
                     }
                 }
                 Console.WriteLine("Database generated");
-                SaveChanges();
+               
 
             }
 
             void GenerateRegularCalls(Random rng, Call currentCall, T_Event_Type[] EventTypes, ref DateTime datetime)
             {
                 T_Event currenEvent;
-
                 for (int j = 0; j < 5; j++)
                 {
                     //Add a receiver and saves the call
                     currentCall.Receiver = RandomAllowedNumber(rng);
-                    Calls.Add(currentCall);
+                    InsertOneToMongoTable(currentCall);
 
                     //Generates the event
                     currenEvent = new T_Event
@@ -131,7 +172,7 @@ namespace CallCentreTask.Data
                         Record_Date = datetime,
                         Call_ = currentCall
                     };
-                    Events.Add(currenEvent);
+                    InsertOneToMongoTable(currenEvent);
 
                     //Adds seconds to simulate loading and people talking
                     
@@ -157,7 +198,7 @@ namespace CallCentreTask.Data
                 {
                     //Add a receiver and saves the call
                     currentCall.Receiver = RandomAllowedNumber(rng);
-                    Calls.Add(currentCall);
+                    InsertOneToMongoTable(currentCall);
 
                         
                     //Adds the needed events 
@@ -170,7 +211,7 @@ namespace CallCentreTask.Data
                             Call_ = currentCall
                         };
                         Console.WriteLine(currenEvent.FormatToCvsString());
-                        Events.Add(currenEvent);
+                        InsertOneToMongoTable(currenEvent);
 
 
                         //Adds seconds to simulate loading
@@ -186,7 +227,7 @@ namespace CallCentreTask.Data
             foreach (var event_ in EventTypes)
             {
                 //Saves the call
-                Calls.Add(currentCall);
+                InsertOneToMongoTable(currentCall);
 
 
                 //Adds the needed events
@@ -198,7 +239,7 @@ namespace CallCentreTask.Data
                         Record_Date = datetime,
                         Call_ = currentCall
                     };
-                    Events.Add(currenEvent);
+                    InsertOneToMongoTable(currenEvent);
 
                     //Adds seconds to simulate loading
                     datetime = datetime.AddSeconds(rng.Next(5, 20));
@@ -232,15 +273,6 @@ namespace CallCentreTask.Data
             start = start.AddSeconds(rng.Next(0, 61));
 
             return start;
-        }
-
-        
-        //Server=localhost;Database=CallerDb;User Id=SA;Password=Qwe123!;                    MultipleActiveResultSets=true
-
-        //Creates a connection to the database using the connection string in Resources.resx
-        protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder)
-        {
-            dbContextOptionsBuilder.UseSqlServer(PhoneCentre.Properties.Resources.connectionString);
         }
     }
 }

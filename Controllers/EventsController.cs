@@ -115,19 +115,16 @@ namespace PhoneCentre.Controllers
         [HttpGet("history/{caller:int}")]
         public T_Event[][] HistoryDetails(int caller)
         {
-            using (var db = new CallerDb())
+            var IdsOfCalls = _eventsService.GetCallHistory(caller);
+            T_Event[][] historyOfCalls = new T_Event[IdsOfCalls.Count()][];
+            for (int i = 0; i < IdsOfCalls.Count(); i++)
             {
-                var IdsOfCalls = _eventsService.GetCallHistory(caller);
-                T_Event[][] historyOfCalls = new T_Event[IdsOfCalls.Count()][];
-                for (int i = 0; i < IdsOfCalls.Count(); i++)
-                {
-                    historyOfCalls[i] = _eventsService.GetCall((int)IdsOfCalls[i]);
-                }
-
-                historyOfCalls = SortJaggedArrayByDatetime(historyOfCalls);
-
-                return historyOfCalls;
+                historyOfCalls[i] = _eventsService.GetCall((int)IdsOfCalls[i]);
             }
+
+            historyOfCalls = SortJaggedArrayByDatetime(historyOfCalls);
+
+            return historyOfCalls;
         }
         #endregion
 
