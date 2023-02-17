@@ -1,6 +1,6 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const target = 'https://192.168.3.68:44451';
+const target = 'https://localhost:44451';
 
 const context =  [
     "/events",
