@@ -8,18 +8,24 @@ namespace CallCentreTask.Data
 {
     public class CallerDb
     {
-        private string conn = "mongodb://root:Qwe123!!@192.168.3.68:27017";
-        private string DatabaseName = "CallerDB";
+        public string conn = "mongodb://root:Qwe123!!@192.168.3.68:27017";
+        public string DatabaseName = "CallerDB";
         public string Events = nameof(T_Event).ToUpper();
         public string TypesOfEvents = nameof(T_Event_Type).ToUpper();
         public string Calls = nameof(Call).ToUpper();
-
+        private int callsTotal;
         //Made a T generic function first but it only generated 1 table named "T"
         public IMongoCollection<T_Event> GetEventTable()
         {
             var client = new MongoClient(conn);
             var db = client.GetDatabase(DatabaseName);
             return db.GetCollection<T_Event>(Events);
+        }
+        public IQueryable<T_Event> GetEventTableAsQueryable()
+        {
+            var client = new MongoClient(conn);
+            var db = client.GetDatabase(DatabaseName);
+            return db.GetCollection<T_Event>(Events).AsQueryable<T_Event>();
         }
         public IMongoCollection<T_Event_Type> GetTypeTable()
         {
@@ -87,7 +93,7 @@ namespace CallCentreTask.Data
 
 
                 //Initiating counter variables for calls
-                int callsTotal = 1;
+                callsTotal = 1;
                 int regularCounter = 0;
                 int nonDialedCounter = 0;
                 int cancelledCounter = 0;
@@ -105,6 +111,7 @@ namespace CallCentreTask.Data
                         currentCall = new Call
                         {
                             Caller = caller,
+                            Record_Id = callsTotal
                         };
 
 
@@ -158,12 +165,12 @@ namespace CallCentreTask.Data
 
             void GenerateRegularCalls(Random rng, Call currentCall, T_Event_Type[] EventTypes, ref DateTime datetime)
             {
+                currentCall.Receiver = RandomAllowedNumber(rng);
+                InsertOneToMongoTable(currentCall);
                 T_Event currenEvent;
                 for (int j = 0; j < 5; j++)
                 {
                     //Add a receiver and saves the call
-                    currentCall.Receiver = RandomAllowedNumber(rng);
-                    InsertOneToMongoTable(currentCall);
 
                     //Generates the event
                     currenEvent = new T_Event
@@ -193,12 +200,12 @@ namespace CallCentreTask.Data
 
             void GenerateCancelledCalls(Random rng, Call currentCall, T_Event_Type[] EventTypes, ref DateTime datetime)
             {
+                currentCall.Receiver = RandomAllowedNumber(rng);
+                InsertOneToMongoTable(currentCall);
                 T_Event currenEvent;
                 foreach (var event_ in EventTypes)
                 {
                     //Add a receiver and saves the call
-                    currentCall.Receiver = RandomAllowedNumber(rng);
-                    InsertOneToMongoTable(currentCall);
 
                         
                     //Adds the needed events 
@@ -223,11 +230,11 @@ namespace CallCentreTask.Data
 
         private void GenerateNonDialedCalls(Random rng, Call currentCall, T_Event_Type[] EventTypes, ref DateTime datetime)
         {
+            InsertOneToMongoTable(currentCall);
             T_Event currenEvent;
             foreach (var event_ in EventTypes)
             {
                 //Saves the call
-                InsertOneToMongoTable(currentCall);
 
 
                 //Adds the needed events

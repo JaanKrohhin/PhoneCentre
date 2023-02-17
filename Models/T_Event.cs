@@ -5,8 +5,8 @@ namespace PhoneCentre.Models
 {
     public class T_Event
     {
-        [BsonElement("RECORD_ID")]
-        public int Record_Id { get; set; }
+        [BsonId, BsonElement("RECORD_ID")]
+        public ObjectId Record_Id { get; set; }
 
         [BsonElement("RECORD_EVENT_ID")]
         public string Record_Event_Id { get => Event_Type.Event_Id; }

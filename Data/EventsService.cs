@@ -1,7 +1,9 @@
 ﻿using CallCentreTask.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PhoneCentre.Models;
+using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Text;
 
@@ -33,7 +35,15 @@ namespace PhoneCentre.Data
          */
         public IEnumerable<T_Event> GetData(string searchString, string[] eventTypefilter, string sortColumn, string sortDirection, int numberOfSkips, int size)
         {
-                return db.GetEventTable().AsQueryable()
+            var client = new MongoClient(db.conn);
+            var md = client.GetDatabase(db.DatabaseName);
+            IEnumerable<T_Event> a = md.GetCollection<T_Event>(db.Events).AsQueryable<T_Event>().AsEnumerable();
+            var b = md.GetCollection<T_Event>(db.Events).Find(_ => true).ToEnumerable();
+            foreach( var e in b)
+            {
+                Debug.WriteLine(e);
+            }
+            return db.GetEventTableAsQueryable()
 
                     .FilterByEventType(eventTypefilter)
 
@@ -41,7 +51,7 @@ namespace PhoneCentre.Data
                     
                     .SortByColumn(sortColumn, sortDirection)
 
-                    .GetPage(size, numberOfSkips);
+                    .GetPage(size, numberOfSkips).AsEnumerable();
         }
 
 
