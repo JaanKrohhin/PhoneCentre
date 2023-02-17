@@ -1,16 +1,14 @@
 ﻿using System.Linq.Dynamic.Core;
+using System.Linq.Expressions;
 using PhoneCentre.Models;
 
 public static class EventServiceHelpers
 {
     public static IQueryable<T_Event> SortByColumn(this IQueryable<T_Event> query, string columnName, string columnDirection)
     {
-        var direction = columnDirection.ToUpper();
+        var ascending = columnDirection == "asc";
 
-        var fullProperty = "Call_." + columnName;
-
-        var fullQueryText = fullProperty + " " + direction;
-        return query.OrderBy(fullQueryText);
+        return query.Sort(columnName, ascending);
     }
 
     //Possible solution
@@ -86,6 +84,21 @@ public static class EventServiceHelpers
             var prop = src.GetType().GetProperty(propName);
             return prop != null ? prop.GetValue(src, null) : null;
         }
+    }
+    public static IQueryable<T_Event> Sort(this IQueryable<T_Event> source, string column, bool ascending)
+    {
+        var type = typeof(Call);
+        var property = type.GetProperty(column);
+
+        var direction = ascending ? "OrderBy" : "OrderByDescending";
+
+        ParameterExpression parameter = Expression.Parameter(typeof(T_Event));
+        MemberExpression memberExpression = Expression.MakeMemberAccess(Expression.Property(parameter, "Call_"), property);
+        LambdaExpression sortExpression = Expression.Lambda(memberExpression, parameter);
+
+        MethodCallExpression orderCall = Expression.Call(typeof(Queryable), direction, new[] { typeof(T_Event), property.PropertyType }, source.Expression, Expression.Quote(sortExpression));
+
+        return source.Provider.CreateQuery<T_Event>(orderCall);
     }
 
 }
