@@ -7,10 +7,14 @@ import { ExportButton } from "./TableExtras/ExportButton";
 import { useState } from "react";
 import TableTitle from './TableTitle'
 import { withTranslation } from 'react-i18next';
-//The page to fall back on
+
+
 const pageReset = 1;
 
-function Table({ Title, RowsDataSource, DefaultExportHandleSource, HeaderClick, SearchHandler, FooterHandlers, IsMainTable, RowSizes, SelectedRowSize, CheckedStateOfEvents, ExportHandle, ColumnNames, IsHistory, DataConnection }) {
+
+
+
+function Table({ Title, RowsDataSource, DefaultExportHandleSource, HeaderClick, SearchHandler, FooterHandlers, IsMainTable, RowSizes, SelectedRowSize, CheckedStateOfEvents, ExportHandle, ColumnNames, IsHistory, DataConnection, t }) {
 
 
     const [state, setState] = useState({
@@ -104,7 +108,7 @@ function Table({ Title, RowsDataSource, DefaultExportHandleSource, HeaderClick, 
 
     //On header "caller" click, sort the data by caller. On header "reciever" click, sort the data by reciever. A second click on the same header will reverse the sort order. Always fetches data
     const headerClickHandle = HeaderClick === undefined ? (event) => {
-        let sortColumnName = event.column;
+        let sortColumnName = t(event.column, {lng: "en"});
 
         let sortDirection = state.sortDirection === "asc" ? "desc" : "asc";
 
