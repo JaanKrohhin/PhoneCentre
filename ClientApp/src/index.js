@@ -13,9 +13,7 @@ const root = createRoot(rootElement);
 
 root.render(
   <BrowserRouter basename={baseUrl}>
-        <I18nextProvider i18n={i18n}>
             <App />
-        </I18nextProvider>,
   </BrowserRouter>);
 
 // If you want your app to work offline and load faster, you can change

@@ -2,23 +2,31 @@ version: '3.4'
 
 services:
   phonecentre:
-    container_name: Api
+    container_name: netapi
     image: ${DOCKER_REGISTRY-}phonecentre
     build:
       context: .
       dockerfile: Dockerfile
   clientapp:
     build: /ClientApp
-    container_name: Client
+    container_name: react-client
+    environment:
+      - API_URL=https://host.docker.internal:44451
     ports:
       - "44450:44450"
     stdin_open: true
     tty: true
+    networks:
+      - network
   mongodb:
-    container_name: Mongo
+    container_name: mongo
     image: mongo
     ports:
       - "27017:27017" 
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: Qwe123!!
+
+networks:
+  network:
+    driver: bridge

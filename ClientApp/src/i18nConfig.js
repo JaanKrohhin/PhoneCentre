@@ -20,7 +20,7 @@ i18n.use(initReactI18next)
     .init({
         returnObjects: true,
         resources,
-        debug:true,
+        debug:false,
         lng: window.localStorage.defaultLanguage,
         fallbackLng: ["ee", "en"],
         react: {
