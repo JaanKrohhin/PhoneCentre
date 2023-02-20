@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using PhoneCentre.Models;
 
-public static class EventServiceHelpers
+public static class ServiceExtensions
 {
     public static IQueryable<T_Event> SortByColumn(this IQueryable<T_Event> query, string columnName, string columnDirection)
     {
@@ -53,19 +53,6 @@ public static class EventServiceHelpers
 
                     ;
 
-
-    }
-
-    public static IQueryable<T_Event> Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(this IQueryable<T_Event> query, string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip, int dataChunkSize)
-    {
-
-        return query.SortByColumn(sortColumn, sortDirection)
-
-            .FilterBySearch(searchString)
-
-            .FilterByEventType(eventTypefilter)
-
-            .GetPage(dataChunkSize, chunkSkip);
 
     }
 

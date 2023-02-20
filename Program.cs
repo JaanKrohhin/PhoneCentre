@@ -1,9 +1,13 @@
+using PhoneCentre.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton<IDbOptions, EventService>();
+
 
 var app = builder.Build();
 

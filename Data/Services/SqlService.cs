@@ -1,26 +1,18 @@
-﻿using CallCentreTask.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
+﻿using Microsoft.EntityFrameworkCore;
+using PhoneCentre.Data.Databases;
 using PhoneCentre.Models;
-using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Text;
 
-namespace PhoneCentre.Data
+namespace PhoneCentre.Data.Services
 {
-
-    // "Implement proper code separation: Controllers must never access the database directly, instead they need to call a service class, which handles the database operations"
-
-
-    public class EventService
+    public class SqlService : IDbService
     {
+        private readonly SqlDb db;
 
-        private readonly CallerDb db;
-
-        public EventService()
+        public SqlService()
         {
-            db = new CallerDb();
+            db = new SqlDb();
         }
 
 
@@ -33,25 +25,20 @@ namespace PhoneCentre.Data
             I have no clue, if this is the correct way to interpet sorting said by the task.
         
          */
-        public IEnumerable<T_Event> GetData(string searchString, string[] eventTypefilter, string sortColumn, string sortDirection, int numberOfSkips, int size)
+        public IQueryable<T_Event> GetData(string searchString, string[] eventTypefilter, string sortColumn, string sortDirection, int numberOfSkips, int size)
         {
-            var client = new MongoClient(db.conn);
-            var md = client.GetDatabase(db.DatabaseName);
-            IEnumerable<T_Event> a = md.GetCollection<T_Event>(db.Events).AsQueryable<T_Event>().AsEnumerable();
-            var b = md.GetCollection<T_Event>(db.Events).Find(_ => true).ToEnumerable();
-            foreach( var e in b)
-            {
-                Debug.WriteLine(e);
-            }
-            return db.GetEventTableAsQueryable()
 
-                    .FilterByEventType(eventTypefilter)
+            return db.Events.Include(Event => Event.Call_)
 
-                    .FilterBySearch(searchString)
-                    
-                    .SortByColumn(sortColumn, sortDirection)
+                .Include(Event => Event.Event_Type)
 
-                    .GetPage(size, numberOfSkips).AsEnumerable();
+                .FilterByEventType(eventTypefilter)
+
+                .FilterBySearch(searchString)
+
+                .SortByColumn(sortColumn, sortDirection)
+
+                .GetPage(size, numberOfSkips);
         }
 
 
@@ -60,7 +47,9 @@ namespace PhoneCentre.Data
         public async void WriteCSVDataToStream(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, PipeWriter writer)
         {
 
-            var query = db.GetEventTable().AsQueryable()
+            var query = db.Events.Include(Events => Events.Event_Type)
+
+                             .Include(Events => Events.Call_)
 
                              .FilterByEventType(eventTypefilter)
 
@@ -80,18 +69,21 @@ namespace PhoneCentre.Data
 
         public T_Event[] GetCall(int callId)
         {
-            return db.GetEventTable().AsQueryable()
-                .Where(Event => Event.Call_Id == callId)
+            return db.Events.Where(Event => Event.Call_Id == callId)
+                .Include(Event => Event.Call_)
+                .Include(Event => Event.Event_Type)
                 .ToArray();
         }
 
-        public int?[] GetCallHistory( int caller)
+        public int?[] GetCallHistory(int caller)
         {
-            return db.GetEventTable().AsQueryable()
-                .Where(Event => Event.Call_.Caller == caller)
+            return db.Events.Where(Event => Event.Call_.Caller == caller)
+                                .Include(Event => Event.Call_)
                                 .Select(Event => Event.Call_Id)
                                 .Distinct()
                                 .ToArray();
         }
+
     }
 }
+

@@ -4,7 +4,7 @@ using PhoneCentre.Models;
 using System.Linq.Dynamic.Core;
 using System.Runtime.CompilerServices;
 
-namespace CallCentreTask.Data
+namespace PhoneCentre.Data.Databases
 {
     public class CallerDb
     {
@@ -25,7 +25,7 @@ namespace CallCentreTask.Data
         {
             var client = new MongoClient(conn);
             var db = client.GetDatabase(DatabaseName);
-            return db.GetCollection<T_Event>(Events).AsQueryable<T_Event>();
+            return db.GetCollection<T_Event>(Events).AsQueryable();
         }
         public IMongoCollection<T_Event_Type> GetTypeTable()
         {
@@ -88,7 +88,7 @@ namespace CallCentreTask.Data
 
                 InsertManyToMongoTable(EventTypes);
 
-               
+
 
 
 
@@ -159,7 +159,7 @@ namespace CallCentreTask.Data
                     }
                 }
                 Console.WriteLine("Database generated");
-               
+
 
             }
 
@@ -182,7 +182,7 @@ namespace CallCentreTask.Data
                     InsertOneToMongoTable(currenEvent);
 
                     //Adds seconds to simulate loading and people talking
-                    
+
                     if (EventTypes[j].Event_Id == "EVENT_CALL_ESTABLISHED")
                     {
 
@@ -207,7 +207,7 @@ namespace CallCentreTask.Data
                 {
                     //Add a receiver and saves the call
 
-                        
+
                     //Adds the needed events 
                     if (event_.Event_Id == "EVENT_PICK_UP" || event_.Event_Id == "EVENT_DIAL" || event_.Event_Id == "EVENT_CALL_END")
                     {
@@ -262,7 +262,7 @@ namespace CallCentreTask.Data
 
             var digits = new int[] { 3, 5, 8 };
 
-            int phoneDigit = digits[rng.Next( 0, digits.Length)];
+            int phoneDigit = digits[rng.Next(0, digits.Length)];
 
             return rng.Next(phoneDigit * numberSize, (phoneDigit + 1) * numberSize);
         }
