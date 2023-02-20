@@ -1,14 +1,13 @@
-﻿using CallCentreTask.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
-using PhoneCentre.Data;
 using PhoneCentre.Models;
 using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Net.Http.Headers;
 using System.Web;
+using PhoneCentre.Data.Interfaces;
 
 namespace PhoneCentre.Controllers
 {
@@ -16,12 +15,11 @@ namespace PhoneCentre.Controllers
     [Route("[controller]")]
     public class EventsController : ControllerBase
     {
-        private readonly EventService _eventsService;
+        private readonly IService _eventsService;
 
-        public EventsController()
-        {
-            _eventsService = new EventService();
-        }
+        public EventsController(IService service) =>
+            _eventsService = service;
+        
 
 
 

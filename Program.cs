@@ -1,9 +1,26 @@
+using PhoneCentre.Data.Databases;
+using PhoneCentre.Data.Interfaces;
+using PhoneCentre.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+var serviceDbIsSql = builder.Configuration.GetValue<bool>("UseSqlOverMongo");
+
+builder.Services.Configure<DbOptions>(
+    builder.Configuration.GetSection(DbOptions.SectionName));
+
+
+if (serviceDbIsSql)
+{
+    builder.Services.AddSingleton<IService, SqlService>();
+}
+else
+{
+    builder.Services.AddSingleton<IService, MongoService>();
+}
 
 var app = builder.Build();
 

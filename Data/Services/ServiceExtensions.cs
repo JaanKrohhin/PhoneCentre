@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using PhoneCentre.Models;
 
-public static class EventServiceHelpers
+public static class ServiceExtensions
 {
     public static IQueryable<T_Event> SortByColumn(this IQueryable<T_Event> query, string columnName, string columnDirection)
     {
@@ -56,33 +56,20 @@ public static class EventServiceHelpers
 
     }
 
-    public static IQueryable<T_Event> Apply_Sorting_And_Filtering_To_IQueryable_For_CSV(this IQueryable<T_Event> query, string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int chunkSkip, int dataChunkSize)
+    public static object GetPropertyValue(object source, string propertyName)
     {
+        if (source == null) throw new ArgumentException("Value cannot be null.", "source");
+        if (propertyName == null) throw new ArgumentException("Value cannot be null.", "propertyName");
 
-        return query.SortByColumn(sortColumn, sortDirection)
-
-            .FilterBySearch(searchString)
-
-            .FilterByEventType(eventTypefilter)
-
-            .GetPage(dataChunkSize, chunkSkip);
-
-    }
-
-    public static object GetPropertyValue(object src, string propName)
-    {
-        if (src == null) throw new ArgumentException("Value cannot be null.", "src");
-        if (propName == null) throw new ArgumentException("Value cannot be null.", "propName");
-
-        if (propName.Contains("."))//complex type nested
+        if (propertyName.Contains("."))//complex type nested
         {
-            var temp = propName.Split(new char[] { '.' }, 2);
-            return GetPropertyValue(GetPropertyValue(src, temp[0]), temp[1]);
+            var temp = propertyName.Split(new char[] { '.' }, 2);
+            return GetPropertyValue(GetPropertyValue(source, temp[0]), temp[1]);
         }
         else
         {
-            var prop = src.GetType().GetProperty(propName);
-            return prop != null ? prop.GetValue(src, null) : null;
+            var prop = source.GetType().GetProperty(propertyName);
+            return prop != null ? prop.GetValue(source, null) : null;
         }
     }
     public static IQueryable<T_Event> Sort(this IQueryable<T_Event> source, string column, bool ascending)

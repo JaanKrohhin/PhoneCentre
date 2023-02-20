@@ -5,22 +5,17 @@ namespace PhoneCentre.Models
 {
     public class T_Event
     {
-        [BsonId, BsonElement("RECORD_ID")]
-        public ObjectId Record_Id { get; set; }
+        public ObjectId _id { get; set; }
+        public int Record_Id { get; set; }
 
-        [BsonElement("RECORD_EVENT_ID")]
-        public string Record_Event_Id { get => Event_Type.Event_Id; }
+        public string? Record_Event_Id { get; set; }
 
-        [BsonElement("EVENT_TYPE")]
-        public T_Event_Type Event_Type { get; set; }
+        public T_Event_Type? Event_Type { get; set; }
 
-        [BsonElement("RECORD_DATE")]
         public DateTime Record_Date { get; set; }
 
-        [BsonElement("CALL_ID")]
-        public int? Call_Id { get => Call_.Record_Id; }
+        public int? Call_Id { get; set; }
 
-        [BsonElement("CALL")]
         public Call? Call_ { get; set; }
 
         public string FormatToCvsString()
