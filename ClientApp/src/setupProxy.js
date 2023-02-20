@@ -1,6 +1,7 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const target = 'https://localhost:44451';
+//Docker-compose file get the var
+const target = process.env.API_URL;
 
 const context =  [
     "/events",
