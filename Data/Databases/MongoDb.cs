@@ -159,7 +159,6 @@ namespace PhoneCentre.Data.Databases
                             break;
                     }
                 }
-                Console.WriteLine("Database generated");
 
 
             }

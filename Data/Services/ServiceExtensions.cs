@@ -1,4 +1,5 @@
-﻿using System.Linq.Dynamic.Core;
+﻿using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using PhoneCentre.Models;
 
@@ -17,7 +18,7 @@ public static class ServiceExtensions
     public static IQueryable<T_Event> FilterByEventType(this IQueryable<T_Event> query, string[] eventTypefilter)
     {
 
-        if (eventTypefilter.Any(EventType => EventType != ""))
+        if (eventTypefilter.Any(EventType => EventType != null))
         {
 
             return query.Where(_event => eventTypefilter.Contains(_event.Event_Type.Event_Id));
@@ -45,13 +46,14 @@ public static class ServiceExtensions
         }
     }
 
-    public static IQueryable<T_Event> GetPage(this IQueryable<T_Event> query, int sizeOfPage, int numberOfPagesToSkips)
+    public static IQueryable<T_Event> GetPage(this IQueryable<T_Event> query, int? sizeOfPage, int? numberOfPagesToSkips)
     {
-        return query.Skip((numberOfPagesToSkips - 1) * sizeOfPage)
+        int howManyToSkip = ((numberOfPagesToSkips - 1) * sizeOfPage).Value;
+        int howManyToTake = sizeOfPage.Value;
+        return query.Skip(howManyToSkip)
 
-                    .Take(sizeOfPage)
+                    .Take(howManyToTake);
 
-                    ;
 
 
     }

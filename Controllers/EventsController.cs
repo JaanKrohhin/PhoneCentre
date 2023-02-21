@@ -19,7 +19,7 @@ namespace PhoneCentre.Controllers
 
         public EventsController(IService service) =>
             _eventsService = service;
-        
+
 
 
 
@@ -34,13 +34,16 @@ namespace PhoneCentre.Controllers
         /// <param name="sortColumn">Column that the user wants to sort by. Only can sort by caller and receiver ASC/DESC</param>
         /// <param name="optionalParams">Optional parameters that are used for sorting and filtering the data, separated by '+' sign. Direction of the sort: ASC/DESC. The search string to filter by. The events to filter by. A full variable will look like this: "desc+375+EVENT_PICK_UP----"</param>
         /// <returns>Filtered and sorted data from DB as an Array</returns>
-        [HttpGet("{rowSize:int}/{pageNumber:int}/{sortColumn}/{optionalParams?}")]
-        public T_Event[] Index(int rowSize,int pageNumber, string sortColumn, string optionalParams = "asc")
+        [HttpGet("")]
+        public T_Event[] Index([FromQuery] Parameters parameters, [FromQuery(Name = "filter[]")] string[] filter)
         {
             // Split the optional parameters into their respective variables
-            string searchString, sortDirection;
-            string[] eventTypefilter;
-            ConvertParamsToVariables(optionalParams, out searchString, out sortDirection, out eventTypefilter);
+            int? rowSize = parameters.rowSize, pageNumber = parameters.pageNumber;
+            string? searchString = parameters.searchString, sortDirection = parameters.sortDirection, sortColumn = parameters.sortColumn;
+            string[] eventTypefilter = filter;
+
+
+            //ConvertParamsToVariables(optionalParams, out searchString, out sortDirection, out eventTypefilter);
 
             //Get data array
             T_Event[] eventsArray = GetFilteredAndSortedData(sortColumn, searchString, sortDirection, eventTypefilter, pageNumber, rowSize);
@@ -51,9 +54,6 @@ namespace PhoneCentre.Controllers
         }
 
 
-
-
-
         
         /// <summary>
         /// Gets full details of the event by its Call ID
@@ -61,7 +61,7 @@ namespace PhoneCentre.Controllers
         /// <param name="callId">Id of the call to get the details of</param>
         /// <returns>An array of events that all have same callId</returns>
         [HttpGet("details/{callId:int}")]
-        public T_Event[] CallDetails(int callId)
+        public T_Event[] CallDetails( int callId)
         {
                 return _eventsService.GetCall(callId);
         }
@@ -79,16 +79,11 @@ namespace PhoneCentre.Controllers
         /// <returns>A downloadable file with the todays date in the name: "all_records_yyyyMMdd.csv"</returns>
         /// 
 
-        [HttpGet("download/{sortColumn}/{sortParams}")]
-        public void DownloadCSV(string sortColumn, string sortParams)
+        [HttpGet("download")]
+        public void DownloadCSV([FromQuery] Parameters parameters, [FromQuery(Name = "filter[]")] string[] filter)
         {
-            string searchString, sortDirection;
-            string[] eventTypefilter;
-            ConvertParamsToVariables(sortParams, out searchString, out sortDirection, out eventTypefilter);
-
-
-            var filename = $"all_records.csv";
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), filename);
+            string? searchString = parameters.searchString, sortDirection = parameters.sortDirection, sortColumn = parameters.sortColumn;
+            string[] eventTypefilter = filter;
 
             Response.Clear();
             Response.ContentType = "text/csv";
@@ -110,7 +105,7 @@ namespace PhoneCentre.Controllers
         /// </summary>
         /// <param name="caller">Number of the caller</param>
         /// <returns>Returns a jagged array of events with the same caller number</returns>
-        [HttpGet("history/{caller:int}")]
+        [HttpGet("history/{caller}")]
         public T_Event[][] HistoryDetails(int caller)
         {
             var IdsOfCalls = _eventsService.GetCallHistory(caller);
@@ -130,7 +125,7 @@ namespace PhoneCentre.Controllers
 
 
         
-        private T_Event[] GetFilteredAndSortedData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int pageNumber, int rowSize)
+        private T_Event[] GetFilteredAndSortedData(string sortColumn, string searchString, string sortDirection, string[] eventTypefilter, int? pageNumber, int? rowSize)
         {
             var eventsArray = _eventsService.GetData(searchString, eventTypefilter, sortColumn, sortDirection, pageNumber, rowSize);
 

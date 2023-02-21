@@ -35,7 +35,7 @@ namespace PhoneCentre.Data.Services
             I have no clue, if this is the correct way to interpet sorting said by the task.
         
          */
-        public IQueryable<T_Event> GetData(string searchString, string[] eventTypefilter, string sortColumn, string sortDirection, int numberOfSkips, int size)
+        public IQueryable<T_Event> GetData(string searchString, string[] eventTypefilter, string sortColumn, string sortDirection, int? numberOfSkips, int? size)
         {
             return db.GetEventTableAsQueryable()
 

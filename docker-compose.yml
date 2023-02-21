@@ -11,7 +11,8 @@ services:
       - network
 
   clientapp:
-    build: /ClientApp
+    build: 
+      context: ./ClientApp
     container_name: react-client
     environment:
       - API_URL=https://host.docker.internal:44451

@@ -12,13 +12,13 @@ class RecordsQueryPage extends React.Component {
     checkedStateOfEvents = ["", "", "", "", ""]
 
     dataSource = (stateOfTable) => {
-        let filter = stateOfTable.checkedState.join("-")
-        return `events/${stateOfTable.selectedSize}/${stateOfTable.pageNumber}/${stateOfTable.sortColumnName}/${stateOfTable.sortDirection}+${stateOfTable.search}+${filter}`
+        let filter = "filter[]="+stateOfTable.checkedState.join("&filter[]=")
+        return `events?rowSize=${stateOfTable.selectedSize}&pageNumber=${stateOfTable.pageNumber}&sortColumn=${stateOfTable.sortColumnName}&sortDirection=${stateOfTable.sortDirection}&searchString=${stateOfTable.search}&${filter}`
     }
 
     exportSource = (stateOfTable) => {
-        let filter = stateOfTable.checkedState.join("-")
-        return `events/download/${stateOfTable.sortColumnName}/${stateOfTable.sortDirection}+${stateOfTable.search}+${filter}`
+        let filter = "filter[]="+stateOfTable.checkedState.join("&filter[]=")
+        return `events/download?sortColumn=${stateOfTable.sortColumnName}&sortDirection=${stateOfTable.sortDirection}&searchString=${stateOfTable.search}&${filter}`
     }
     //The Table
     render() {
