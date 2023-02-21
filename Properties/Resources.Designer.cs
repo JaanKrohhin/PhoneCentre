@@ -61,7 +61,7 @@ namespace PhoneCentre.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data Source=192.168.3.68,1433;Initial Catalog=caller;User ID=sa;Password=Qwe123!!;TrustServerCertificate=True.
+        ///   Looks up a localized string similar to Data Source=host.docker.internal,1433;Initial Catalog=caller;User ID=sa;Password=Qwe123!!;TrustServerCertificate=True.
         /// </summary>
         internal static string connectionString {
             get {
